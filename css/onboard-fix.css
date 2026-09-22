@@ -1,0 +1,8 @@
+/* Esconde a barra duplicada no Origo Fratris */
+body.onboard .topbar,
+body:has(#page-onboard.active) .topbar { display: none; }
+body.onboard .nav,
+body:has(#page-onboard.active) .nav { display: none; }
+body.onboard .app,
+body:has(#page-onboard.active) .app { padding-bottom: 16px; }
+body:has(#page-onboard.active) .splash { padding-bottom: 32px; }
