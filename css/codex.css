@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
 
 :root {
-  --parchment: #e8d7b3;
-  --parchment-2: #f3e6c8;
-  --parchment-3: #d4be91;
-  --ink: #1c140e;
-  --ink-soft: #3a2b1e;
-  --gold: #9a7b32;
-  --gold-2: #c4a354;
+  --parchment: #f3ead8;
+  --parchment-2: #f8f1e2;
+  --parchment-3: #e4d6bf;
+  --ink: #2a2218;
+  --ink-soft: #5a4c3a;
+  --gold: #7a6248;
+  --gold-2: #a3845c;
   --blood: #6b1c16;
-  --frame: #2b1d12;
+  --frame: #3a3126;
   --ok: #3d5a2c;
   --warn: #8a4b12;
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -21,9 +21,10 @@ body {
   font-family: "Crimson Pro", Georgia, serif;
   color: var(--ink);
   background:
-    radial-gradient(ellipse at 20% 0%, rgba(255,240,210,.35), transparent 50%),
-    repeating-linear-gradient(0deg, rgba(90,60,20,.035) 0 1px, transparent 1px 3px),
-    linear-gradient(180deg, #efe0c0 0%, #e4d0a8 40%, #d9c294 100%);
+    radial-gradient(ellipse at 12% 8%, rgba(90,70,40,.07), transparent 42%),
+    radial-gradient(ellipse at 88% 92%, rgba(70,50,30,.08), transparent 40%),
+    repeating-linear-gradient(0deg, rgba(70,50,30,.03) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, #f7f1e4 0%, #efe4d0 48%, #e6d8c0 100%);
   min-height: 100%;
 }
 body::before {
@@ -36,13 +37,19 @@ body::before {
 .app { max-width: 520px; margin: 0 auto; min-height: 100%; position: relative; padding-bottom: var(--nav-h); }
 
 .ornate {
-  border: 2px solid var(--frame);
-  box-shadow: inset 0 0 0 4px var(--gold), 0 8px 18px rgba(40,20,8,.18);
-  background: linear-gradient(180deg, var(--parchment-2), var(--parchment));
+  border: 1px solid var(--frame);
+  box-shadow:
+    inset 0 0 0 1px var(--parchment-2),
+    inset 0 0 0 5px rgba(58,49,38,.55),
+    inset 0 0 0 6px var(--parchment-2),
+    0 10px 20px rgba(40,28,12,.12);
+  background:
+    radial-gradient(ellipse at 8% 12%, rgba(80,60,30,.05), transparent 36%),
+    linear-gradient(180deg, var(--parchment-2), var(--parchment));
   position: relative;
 }
 .ornate::before, .ornate::after {
-  content: ""; position: absolute; width: 14px; height: 14px; border: 2px solid var(--gold);
+  content: ""; position: absolute; width: 16px; height: 16px; border: 1px solid var(--frame);
 }
 .ornate::before { top: 6px; left: 6px; border-right: 0; border-bottom: 0; }
 .ornate::after { bottom: 6px; right: 6px; border-left: 0; border-top: 0; }
@@ -53,8 +60,8 @@ h1,h2,h3,.display { font-family: "Cinzel", serif; letter-spacing: .08em; }
 .topbar {
   position: sticky; top: 0; z-index: 20;
   padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
-  background: #efe2c4;
-  box-shadow: 0 8px 16px #efe2c4;
+  background: #f4ead8;
+  box-shadow: 0 8px 16px #f4ead8;
 }
 body.onboard .topbar,
 body:has(#page-onboard.active) .topbar { display: none; }
@@ -125,7 +132,7 @@ label.field { display: block; margin: 10px 0; font-size: 13px; }
 label.field span { display: block; font-family: Cinzel, serif; letter-spacing: .1em; font-size: 11px; margin-bottom: 4px; }
 input, select, textarea {
   width: 100%; padding: 10px 12px; border: 1px solid var(--frame);
-  background: #f7edd6; font-family: "Crimson Pro", serif; font-size: 16px; color: var(--ink);
+  background: #fbf6ea; font-family: "Crimson Pro", serif; font-size: 16px; color: var(--ink);
 }
 textarea { min-height: 70px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -148,7 +155,7 @@ textarea { min-height: 70px; }
 .list .item b { font-weight: 600; }
 .chip {
   display: inline-block; border: 1px solid var(--frame); padding: 4px 8px; margin: 0 6px 6px 0;
-  font-size: 12px; background: #f3e6c8;
+  font-size: 12px; background: #f8f1e2;
 }
 .chip.on { background: var(--frame); color: var(--parchment-2); }
 
@@ -197,7 +204,7 @@ textarea { min-height: 70px; }
 .doses { display: grid; grid-template-columns: 1fr; gap: 8px; }
 .dose {
   display: block; border: 1px solid var(--frame); padding: 8px 10px;
-  background: #f7edd6; cursor: pointer;
+  background: #fbf6ea; cursor: pointer;
 }
 .dose input { width: auto; margin-right: 8px; }
 .dose b { font-family: Cinzel, serif; letter-spacing: .06em; }

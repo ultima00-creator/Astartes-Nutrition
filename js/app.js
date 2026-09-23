@@ -1,5 +1,5 @@
 const KEY = "astartes_codex_v1";
-const APP_VER = "1.6.0";
+const APP_VER = "1.7.0";
 const MEALS = [
   { id: "cafe", name: "Café da Manhã", latin: "Prandium" },
   { id: "almoco", name: "Almoço", latin: "Merenda" },
@@ -19,6 +19,28 @@ const PROT = [
   { g: 2.0, n: "2,0 g/kg", d: "Déficit · enhanced · preservar massa" }
 ];
 const CUT_WEEKS_DEFAULT = 10;
+const CUT_DEFICIT = [
+  { pct: 10, n: "−10%", d: "Conservador · protege mais massa" },
+  { pct: 15, n: "−15%", d: "Doutrina padrão do Códice" },
+  { pct: 20, n: "−20%", d: "Agressivo · janela mais curta" },
+  { pct: 25, n: "−25%", d: "Duro · recurso de sobra" },
+  { pct: 30, n: "−30%", d: "Extremo" },
+  { pct: 40, n: "−40%", d: "Cerco" },
+  { pct: 50, n: "−50%", d: "Teto do Códice · metade do GET" }
+];
+function cutDeficitPct(p) {
+  const x = Number(p && p.cutDeficitPct);
+  if (x >= 5 && x <= 50) return Math.round(x);
+  return 15;
+}
+function deficitPicker(cur) {
+  cur = cutDeficitPct({ cutDeficitPct: cur });
+  return CUT_DEFICIT.map(x => `
+    <label class="dose ${cur === x.pct ? "on" : ""}">
+      <input type="radio" name="cutDef" value="${x.pct}" ${cur === x.pct ? "checked" : ""}>
+      <b>${x.n}</b><small>${x.d}</small>
+    </label>`).join("");
+}
 const CUT_DOCTRINE = [
   { id: "marine", weeks: 10, n: "Marine", d: "10 semanas — cenário padrão. É o caminho do Códice." },
   { id: "ultra", weeks: 16, n: "Ultra Marine", d: "16 semanas — opcional. Só se você selar por conta própria, com recursos de sobra." }
@@ -83,6 +105,8 @@ function load() {
       if (raw.profile.cutDoctrine === "optimal" || raw.profile.cutDoctrine === "cruise") raw.profile.cutDoctrine = "marine";
       if (!raw.profile.cutDoctrine) raw.profile.cutDoctrine = Number(raw.profile.cutWeeks) >= 14 ? "ultra" : "marine";
       raw.profile.cutWeeks = doctrineOf(raw.profile).weeks;
+      if (raw.profile.cutDeficitPct == null) raw.profile.cutDeficitPct = 15;
+      raw.profile.cutDeficitPct = cutDeficitPct(raw.profile);
     }
     if (!raw.favs) raw.favs = [];
     if (!raw.weights) raw.weights = [];
@@ -128,7 +152,19 @@ function bulkSurplus(p) {
   const g = getKcal(p);
   return Math.max(BULK_MIN, Math.round(g * 0.10));
 }
-function cutAvgKcal(p) { return Math.round(getKcal(p) * 0.85); }
+function cutAvgKcal(p) {
+  return Math.round(getKcal(p) * (1 - cutDeficitPct(p) / 100));
+}
+function cutLowKcal(p) {
+  const g = getKcal(p);
+  const avg = cutAvgKcal(p);
+  return Math.max(Math.round(g * 0.35), 2 * avg - g);
+}
+function cutHighKcal(p) {
+  const g = getKcal(p);
+  const avg = cutAvgKcal(p);
+  return Math.min(g, 2 * avg - cutLowKcal(p));
+}
 function cyclePhase(p, date) {
   if (!p || p.goal !== "cut" || !p.carbCycle) return null;
   const start = p.carbCycleStart || p.cutStart || date || today();
@@ -139,8 +175,8 @@ function targetKcal(p, date) {
   const g = getKcal(p);
   if (p.goal === "cut") {
     const ph = cyclePhase(p, date);
-    if (ph === "high") return g;
-    if (ph === "low") return Math.round(g * 0.70);
+    if (ph === "high") return cutHighKcal(p);
+    if (ph === "low") return cutLowKcal(p);
     return cutAvgKcal(p);
   }
   if (p.goal === "bulk") return g + bulkSurplus(p);
@@ -423,7 +459,7 @@ function renderOnboard() {
         <label class="field"><span>Atividade</span><select name="activity">${act}</select></label>
         <label class="field"><span>Objetivo (desempenho)</span>
           <select name="goal">
-            <option value="cut">Cutting · déficit (–15%)</option>
+            <option value="cut">Cutting · déficit à escolha</option>
             <option value="break">Diet break · GET no peso atual</option>
             <option value="keep" selected>Manutenção contínua</option>
             <option value="bulk">Bulk-up · GET + mínimo 250 kcal</option>
@@ -451,6 +487,7 @@ function renderOnboard() {
       cutStart: fd.get("goal") === "cut" ? today() : null,
       cutDoctrine: "marine",
       cutWeeks: CUT_WEEKS_DEFAULT,
+      cutDeficitPct: 15,
       breakStart: fd.get("goal") === "break" ? today() : null,
       breakDays: BREAK_DAYS
     };
@@ -938,8 +975,8 @@ function renderRelato() {
     <section class="ornate card">
       <h3>Doctrina Nutricia<span>Relatório do dia ${dateLabel(viewDate)}${t.phase ? ` · CHO ${t.phase === "high" ? "alto" : "baixo"}` : ""}</span></h3>
       <canvas class="chart" id="weekChart"></canvas>
-      <p class="muted">${S.profile.carbCycle && S.profile.goal === "cut"
-        ? "Linha = meta do dia. Sobe no alto (GET), desce no baixo (70% GET). A média da dupla é o déficit Marine."
+      <p class="muted">${S.profile.goal === "cut" ? `Déficit selado −${cutDeficitPct(S.profile)}% · média ${cutAvgKcal(S.profile)} kcal. ` : ""}${S.profile.carbCycle && S.profile.goal === "cut"
+        ? "Linha = meta do dia. Sobe no alto (GET), desce no baixo. A média da dupla honra o déficit selado."
         : "Linha = meta do dia."}</p>
     </section>
     <section class="ornate card">
@@ -1029,7 +1066,7 @@ function renderFrater() {
       <label class="field"><span>Atividade</span><select id="pac">${act}</select></label>
       <label class="field"><span>Objetivo</span>
         <select id="pg">
-          <option value="cut" ${p.goal==="cut"?"selected":""}>Cutting · déficit</option>
+          <option value="cut" ${p.goal==="cut"?"selected":""}>Cutting · déficit à escolha</option>
           <option value="break" ${p.goal==="break"?"selected":""}>Diet break · GET</option>
           <option value="keep" ${p.goal==="keep"?"selected":""}>Manutenção contínua</option>
           <option value="bulk" ${p.goal==="bulk"?"selected":""}>Bulk-up · +mín. 250 kcal</option>
@@ -1040,6 +1077,12 @@ function renderFrater() {
     </section>
     ${p.goal === "cut" ? `<section class="ornate card">
       <h3>Doutrina de Cutting<span>Marine padrão · Ultra Marine opcional</span></h3>
+      <p class="field-lab">Déficit sobre o GET</p>
+      <div class="doses">${deficitPicker(p.cutDeficitPct)}</div>
+      <label class="field"><span>Ou percentual livre (5–50)</span>
+        <input id="cdef" type="number" min="5" max="50" step="1" value="${cutDeficitPct(p)}">
+      </label>
+      <p class="muted">Hoje a meta média é GET −${cutDeficitPct(p)}% = ${cutAvgKcal(p)} kcal. No ciclo de CHO o dia baixo ajusta para a dupla continuar nessa média.</p>
       <div class="doses">${doctrinePicker(p.cutDoctrine)}</div>
       <label class="field"><span>Início da campanha</span><input id="cstart" type="date" value="${p.cutStart || today()}"></label>
       <button class="btn" onclick="saveCutClock()">Selar doutrina</button>
@@ -1048,7 +1091,7 @@ function renderFrater() {
       <label class="dose ${p.carbCycle ? "on" : ""}" style="margin-top:10px">
         <input type="checkbox" ${p.carbCycle ? "checked" : ""} onchange="toggleCarbCycle(this.checked)">
         <b>Ciclo de carboidratos</b>
-        <small>Opcional. 1 alto / 1 baixo. Proteína e gordura estáveis; o swing é no CHO.</small>
+        <small>Opcional. 1 alto = GET / 1 baixo = o restante. A média da dupla honra o déficit selado.</small>
       </label>
       ${p.carbCycle ? `<button class="btn ghost" onclick="flipCarbCycle()">Inverter ciclo</button>` : ""}
       <p class="quote">Marine é o padrão. Ultra Marine é opt-in. O ciclo de CHO não é obrigatório.</p>
@@ -1149,6 +1192,7 @@ window.saveProfile = function() {
   p.proteinPerKg = normProt(picked ? picked.value : p.proteinPerKg);
   p.activity = $("#pac").value; p.goal = $("#pg").value;
   p.waterGoal = +$("#pwa").value || 2500;
+  if (p.goal === "cut") p.cutDeficitPct = readCutDeficit();
   applyGoalShift(p, prev, p.goal);
   save(); renderFrater();
 };
@@ -1224,12 +1268,19 @@ window.saveBreakClock = function() {
   S.profile.breakDays = BREAK_DAYS;
   save(); renderFrater();
 };
+function readCutDeficit() {
+  const free = document.getElementById("cdef");
+  const picked = document.querySelector('input[name="cutDef"]:checked');
+  const raw = free && free.value !== "" ? +free.value : (picked ? +picked.value : 15);
+  return cutDeficitPct({ cutDeficitPct: raw });
+}
 window.saveCutClock = function() {
   const p = S.profile;
   p.cutStart = $("#cstart").value || today();
   const picked = document.querySelector('input[name="cutDoctrine"]:checked');
   p.cutDoctrine = picked && picked.value === "ultra" ? "ultra" : "marine";
   p.cutWeeks = doctrineOf(p).weeks;
+  p.cutDeficitPct = readCutDeficit();
   save(); renderFrater();
 };
 window.resetCutClock = function() {
