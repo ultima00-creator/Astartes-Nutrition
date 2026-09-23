@@ -5674,5 +5674,8 @@ window.ASTARTES_FOODS = [
   {"id":"whey-concentrado","name":"Whey protein concentrado (pó)","cat":"Extras","src":"Extra","kcal":380,"p":75.0,"c":8.0,"f":5.0,"servings":[{"n":"scoop 30 g","g":30},{"n":"100 g","g":100}]},
   {"id":"whey-isolado","name":"Whey protein isolado (pó)","cat":"Extras","src":"Extra","kcal":370,"p":88.0,"c":3.0,"f":1.5,"servings":[{"n":"scoop 30 g","g":30},{"n":"100 g","g":100}]},
   {"id":"caseina-micelar","name":"Caseína micelar (pó)","cat":"Extras","src":"Extra","kcal":360,"p":80.0,"c":4.0,"f":2.0,"servings":[{"n":"scoop 30 g","g":30}]},
-  {"id":"pasta-amendoim-integral","name":"Pasta de amendoim integral","cat":"Extras","src":"Extra","kcal":588,"p":22.5,"c":21.0,"f":50.0,"fiber":6.0,"servings":[{"n":"colher de sopa","g":20}]}
+  {"id":"pasta-amendoim-integral","name":"Pasta de amendoim integral","cat":"Extras","src":"Extra","kcal":588,"p":22.5,"c":21.0,"f":50.0,"fiber":6.0,"servings":[{"n":"colher de sopa","g":20}]},
+  {"id":"patinho-moido-cru","name":"Carne, bovina, patinho, moída, crua","cat":"Carnes","src":"Extra","kcal":137,"p":21.7,"c":0,"f":5.5,"chol":62,"na":55,"fe":1.8,"zn":4.2,"servings":[{"n":"100 g","g":100},{"n":"200 g","g":200},{"n":"300 g","g":300},{"n":"400 g","g":400}]},
+  {"id":"patinho-moido-refogado","name":"Carne, bovina, patinho, moída, refogada","cat":"Carnes","src":"Extra","kcal":186,"p":22.0,"c":1.2,"f":10.4,"na":70,"servings":[{"n":"100 g","g":100},{"n":"200 g","g":200},{"n":"300 g","g":300},{"n":"400 g","g":400}]},
+  {"id":"patinho-moido-grelhado","name":"Carne, bovina, patinho, moída, grelhada","cat":"Carnes","src":"Extra","kcal":165,"p":26.5,"c":0,"f":6.2,"servings":[{"n":"100 g","g":100},{"n":"200 g","g":200},{"n":"300 g","g":300},{"n":"400 g","g":400}]}
 ];

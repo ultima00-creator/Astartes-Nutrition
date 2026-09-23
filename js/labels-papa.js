@@ -9,7 +9,7 @@
     const low = fold(rest);
     const meat = /carne|frango|peito|peixe|figado|bovina|patinho|acem/.test(low);
     const ground = /moid/.test(low);
-    const fruit = /banana|mamao|maca|pera|abacate|ameixa|laranja/.test(low);
+    const fruit = /banana|mamao|maca|pera|abacate|ameixa|laranja|maca|mamao/.test(low);
     const tuber = /batata|inhame|cara |cara,|abobora|mandioca|aipim|mandioquinha|cenoura|brocolis|chuchu|abobrin/.test(low);
     if (meat && ground) {
       return rest
@@ -17,12 +17,15 @@
         .replace(/^carne mo[ií]da bovina/i, "Carne moída");
     }
     if (meat) {
-      return "Amassado de " + rest.charAt(0).toLowerCase() + rest.slice(1);
+      const tail = rest.charAt(0).toLowerCase() + rest.slice(1);
+      return "Amassado de " + tail;
     }
     if (fruit && !tuber) {
-      return "Amassada de " + rest.charAt(0).toLowerCase() + rest.slice(1);
+      const tail = rest.charAt(0).toLowerCase() + rest.slice(1);
+      return "Amassada de " + tail;
     }
-    return "Purê de " + rest.charAt(0).toLowerCase() + rest.slice(1);
+    const tail = rest.charAt(0).toLowerCase() + rest.slice(1);
+    return "Purê de " + tail;
   }
   const list = window.ASTARTES_FOODS || [];
   list.forEach(f => {

@@ -382,6 +382,7 @@ function spent(date, consumedKcal) {
 /* ---------- view ---------- */
 function $(sel) { return document.querySelector(sel); }
 function show(id) {
+  document.body.classList.toggle("onboard", id === "page-onboard");
   document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === id));
   document.querySelectorAll(".nav button[data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === id));
   window.scrollTo(0, 0);
@@ -389,6 +390,7 @@ function show(id) {
   if (id === "page-alimentos") renderAlimentos();
   if (id === "page-relato") renderRelato();
   if (id === "page-frater") renderFrater();
+  if (id === "page-apothecary" && window.renderApothecary) window.renderApothecary();
 }
 
 function renderAll() {
@@ -506,6 +508,8 @@ function renderDiario() {
     </div>
     <div style="display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap">
       <button class="btn ghost" onclick="copyYesterday()">Copiar ontem</button>
+      <button class="btn ghost" onclick="openEscriba()">Câmera · Grok</button>
+      <button class="btn ghost" onclick="show('page-apothecary')">Apothecary</button>
     </div>
     <section class="ornate card">
       <h3>Resumo de Energia<span>Consumido · Gastos · Restante</span></h3>
@@ -644,20 +648,101 @@ window.openAdd = function(meal) {
   renderBusca();
   $("#modal").classList.add("open");
 };
+window.openEscriba = function() {
+  $("#modal").classList.add("open");
+  $("#modal").innerHTML = `<div class="sheet ornate">
+    <h3 class="display" style="text-align:center">Escriba</h3>
+    <p class="quote">Diga a ração. Se a foto não bastar, o Códice pergunta.</p>
+    <label class="field"><span>O que foi comido</span>
+      <input id="escr-q" placeholder="patinho moída 300g" onkeydown="if(event.key==='Enter')runEscriba()">
+    </label>
+    <label class="field"><span>Foto do prato</span>
+      <input id="escr-pic" type="file" accept="image/*" capture="environment" onchange="onEscribaPic(this)">
+    </label>
+    <div id="escr-preview"></div>
+    <p class="muted" id="escr-note">A câmera neste aparelho não chama o Grok sozinha. Ela guarda o registro e o texto é que casa com a TBCA. Sem API, o modelo não “vê” o prato.</p>
+    <button class="btn" onclick="runEscriba()">Interpretar ração</button>
+    <button class="btn ghost" onclick="renderBusca()">Voltar à busca</button>
+  </div>`;
+};
+window.onEscribaPic = function(inp) {
+  const file = inp.files && inp.files[0];
+  const box = $("#escr-preview");
+  if (!file || !box) return;
+  const url = URL.createObjectURL(file);
+  box.innerHTML = `<img src="${url}" alt="prato" style="width:100%;max-height:180px;object-fit:cover;margin:8px 0;border:1px solid var(--frame)">
+    <p class="muted">Foto recebida. Escreva o que o Capítulo deve lançar — corte, preparo, gramas.</p>`;
+};
+function rankEscriba(q) {
+  return allFoods().filter(f => foodMatches(f, q)).sort((a,b) => foodScore(a,q) - foodScore(b,q));
+}
+window.runEscriba = function() {
+  const q = ($("#escr-q") && $("#escr-q").value || "").trim();
+  const hasPic = $("#escr-pic") && $("#escr-pic").files && $("#escr-pic").files[0];
+  if (!q) {
+    $("#escr-note").textContent = hasPic
+      ? "A foto chegou, mas o Códice não identifica o alimento sem nome. Qual o corte e o preparo? Ex.: patinho moída refogada."
+      : "Escreva a ração. Ex.: peito de frango grelhado 150g.";
+    return;
+  }
+  const grams = parseGrams(q) || 100;
+  window._lastRationQ = q;
+  const hits = rankEscriba(q).slice(0, 6);
+  if (!hits.length) {
+    $("#escr-note").textContent = "Nada na TBCA com essas palavras. Qual o nome mais curto do alimento? Crie um custom se for industrial.";
+    return;
+  }
+  const top = hits[0];
+  const close = hits.filter(f => foodScore(f, q) - foodScore(top, q) < 80);
+  const unsure = close.length > 1 && (foodScore(close[1], q) - foodScore(top, q) < 40);
+  $("#modal").innerHTML = `<div class="sheet ornate">
+    <h3 class="display" style="text-align:center">Confirmar ração</h3>
+    <p class="muted" style="text-align:center">${unsure ? "Há mais de um candidato. Escolha o corte/preparo certo." : "Candidato principal. Confirme os gramas."}</p>
+    <p class="quote">${q}${grams ? " · " + grams + " g lidos" : ""}</p>
+    <div class="list">${hits.map(f=>`
+      <div class="item" onclick="pickFood('${f.id}')">
+        <div><b>${f.name}</b><div class="meta">${f.cat} · ${f.src||"TBCA"} · ${f.kcal} kcal/100g</div></div>
+      </div>`).join("")}</div>
+    ${unsure ? `<p class="muted">Estava cru, refogado ou grelhado? Toque a linha certa.</p>` : ""}
+    <button class="btn ghost" onclick="openEscriba()">Reformular</button>
+  </div>`;
+  if (!unsure && $("#q")) $("#q").value = q;
+};
 
+function foldTxt(s) {
+  return (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+function queryTokens(q) {
+  return foldTxt(q).split(/[^a-z0-9]+/).filter(t => t && !/^\d+$/.test(t) && !["g","kg","ml","de","da","do","com","sem","e"].includes(t));
+}
+function parseGrams(q) {
+  const m = foldTxt(q).match(/(\d+(?:[.,]\d+)?)\s*(kg|g)\b/);
+  if (!m) return null;
+  const n = parseFloat(m[1].replace(",", "."));
+  return m[2] === "kg" ? Math.round(n * 1000) : Math.round(n);
+}
+function foodMatches(f, q) {
+  if (!q || !q.trim()) return true;
+  const hay = foldTxt(f.name + " " + (f.namePapa || "") + " " + (f.cat || "") + " " + (f.src || ""));
+  const toks = queryTokens(q);
+  if (!toks.length) return hay.includes(foldTxt(q));
+  return toks.every(t => hay.includes(t));
+}
 function foodScore(f, q) {
-  const n = (f.name || "").toLowerCase();
-  const qq = (q || "").toLowerCase().trim();
-  let s = n.length;
+  const n = foldTxt(f.name || "");
+  const qq = foldTxt(q || "").trim();
+  const toks = queryTokens(q);
+  let s = (f.name || "").length;
   if (f.source === "custom" || f.source === "recipe" || f.src === "Extra") s -= 400;
   if (qq && n.startsWith(qq)) s -= 220;
   if (qq && n.includes(qq)) s -= 80;
-  if (/papa de |sopa,|sanduíche|empada|quiche|bolo de|purê|pure de/.test(n)) s += 90;
-  if (/grelhad|cozid|cru,|s\/ pele/.test(n)) s -= 25;
+  toks.forEach(t => { if (n.includes(t)) s -= 35; });
+  if (/papa de |sopa,|sanduiche|empada|quiche|bolo de|pure de/.test(n)) s += 120;
+  if (/grelhad|cozid|refogad|cru/.test(n) && !/papa/.test(n)) s -= 25;
   return s;
 }
 function renderBusca(q="") {
-  const foods = allFoods().filter(f => !q || f.name.toLowerCase().includes(q.toLowerCase()) || (f.cat||"").toLowerCase().includes(q.toLowerCase()));
+  const foods = allFoods().filter(f => foodMatches(f, q));
   const cats = ["Todos", ...Array.from(new Set(allFoods().map(f => f.cat).filter(Boolean)))];
   const shown = (filterCat === "Todos" ? foods : foods.filter(f => f.cat === filterCat))
     .slice().sort((a,b) => foodScore(a,q) - foodScore(b,q));
@@ -667,7 +752,10 @@ function renderBusca(q="") {
     <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:8px 0">
       ${MEALS.map(m=>`<span class="chip ${m.id===pendingMeal?'on':''}" onclick="pendingMeal='${m.id}';renderBusca(document.getElementById('q').value)">${m.name}</span>`).join("")}
     </div>
-    <div class="search"><input id="q" placeholder="Buscar ração..." value="${q}" oninput="renderBusca(this.value)"></div>
+    <div class="search"><input id="q" placeholder="Ex.: patinho moída 300g" value="${q}" oninput="renderBusca(this.value)"></div>
+    <div style="display:flex;gap:8px;margin:8px 0">
+      <button class="btn ghost" style="margin:0" onclick="openEscriba()">Câmera · Grok</button>
+    </div>
     <div style="margin:8px 0">${cats.map(c=>`<span class="chip ${c===filterCat?'on':''}" onclick="filterCat='${c}';renderBusca(document.getElementById('q').value)">${c}</span>`).join("")}</div>
     <div class="list">${shown.slice(0,80).map(f=>`
       <div class="item" onclick="pickFood('${f.id}')">
@@ -682,6 +770,7 @@ window.renderBusca = renderBusca;
 window.pickFood = function(id) {
   const f = foodById(id);
   const serv = f.servings || [{n:"100 g", g:100}];
+  const guessed = parseGrams(($("#q") && $("#q").value) || window._lastRationQ || "") || serv[0].g;
   $("#modal").innerHTML = `<div class="sheet ornate">
     <h3 class="display" style="text-align:center">${f.name}</h3>
     <p class="muted" style="text-align:center">${f.kcal} kcal · P ${f.p} · C ${f.c} · G ${f.f} / 100 g</p>
@@ -691,7 +780,7 @@ window.pickFood = function(id) {
         <option value="100">100 g</option>
       </select>
     </label>
-    <label class="field"><span>Gramas</span><input id="grams" type="number" value="${serv[0].g}"></label>
+    <label class="field"><span>Gramas</span><input id="grams" type="number" value="${guessed}"></label>
     <label class="field"><span>Refeição</span>
       <select id="meal">${MEALS.map(m=>`<option value="${m.id}" ${m.id===pendingMeal?"selected":""}>${m.name}</option>`).join("")}</select>
     </label>
@@ -736,7 +825,7 @@ function renderAlimentos() {
     </section>`;
 }
 function tacoList(q) {
-  return ASTARTES_FOODS.filter(f => !q || f.name.toLowerCase().includes(q.toLowerCase()))
+  return ASTARTES_FOODS.filter(f => foodMatches(f, q))
     .slice().sort((a,b) => foodScore(a,q) - foodScore(b,q))
     .slice(0, 80).map(f => `<div class="item" onclick="pickFood('${f.id}')"><div><b>${f.name}</b><div class="meta">${f.cat} · ${f.src||"TBCA"}</div></div><div class="muted">${f.kcal} kcal</div></div>`).join("");
 }
@@ -1034,6 +1123,20 @@ function renderFrater() {
       </label>
       <button class="btn ghost" onclick="testNotify()">Disparar sinal de teste</button>
       <p class="quote">Isto é sino local via service worker. Push remoto (chegar com o app morto no iPhone) pede servidor APNs — o Códice ainda não tem retaguarda.</p>
+    </section>
+    <section class="ornate card">
+      <h3>Escriba Grok<span>Câmera do prato · facultativo</span></h3>
+      <p class="muted">A chave fica só neste aparelho. Sem ela a câmera não identifica o prato. SuperGrok do chat não substitui esta porta.</p>
+      <label class="field"><span>Chave API (console.x.ai)</span>
+        <input id="xai-key" type="password" autocomplete="off" placeholder="${(localStorage.getItem("astartes_xai_key")||"").trim() ? "•••• já selada" : "xai-..."}">
+      </label>
+      <button class="btn" onclick="(window.saveGrokKey||function(){const v=($('#xai-key').value||'').trim(); if(v)localStorage.setItem('astartes_xai_key',v); else localStorage.removeItem('astartes_xai_key'); alert(v?'Chave selada.':'Chave removida.');})()">Selar chave</button>
+      <button class="btn ghost" onclick="openEscriba()">Abrir câmera</button>
+    </section>
+    <section class="ornate card">
+      <h3>Apothecary Advisor<span>Plano e substituição · micros inclusos</span></h3>
+      <p class="muted">Facultativo. O Códice monta o plano pela TBCA. O Grok só aconselha se a chave estiver selada.</p>
+      <button class="btn" onclick="show('page-apothecary')">Abrir o Apothecarion</button>
     </section>
     <section class="ornate card install-hint">
       <h3>Instalar o Códice<span>PWA v${APP_VER}</span></h3>

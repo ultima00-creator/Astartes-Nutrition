@@ -53,8 +53,15 @@ h1,h2,h3,.display { font-family: "Cinzel", serif; letter-spacing: .08em; }
 .topbar {
   position: sticky; top: 0; z-index: 20;
   padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
-  background: linear-gradient(180deg, #efe2c4 70%, rgba(239,226,196,0));
+  background: #efe2c4;
+  box-shadow: 0 8px 16px #efe2c4;
 }
+body.onboard .topbar,
+body:has(#page-onboard.active) .topbar { display: none; }
+body.onboard .nav,
+body:has(#page-onboard.active) .nav { display: none; }
+body.onboard .app,
+body:has(#page-onboard.active) .app { padding-bottom: 16px; }
 .sigil {
   display: flex; align-items: center; gap: 10px; justify-content: center;
 }
@@ -207,7 +214,7 @@ textarea { min-height: 70px; }
 
 .splash {
   min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-  padding: 24px 18px calc(24px + var(--nav-h));
+  padding: 24px 18px 32px;
   text-align: center;
 }
 .splash h1 { font-size: 26px; margin: 8px 0 4px; }
