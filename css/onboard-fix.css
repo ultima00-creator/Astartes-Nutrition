@@ -1,4 +1,8 @@
-/* Esconde a barra duplicada no Origo Fratris */
+/* Topbar opaca — o texto do card não atravessa o selo */
+.topbar {
+  background: #efe2c4 !important;
+  box-shadow: 0 10px 18px #efe2c4 !important;
+}
 body.onboard .topbar,
 body:has(#page-onboard.active) .topbar { display: none; }
 body.onboard .nav,
