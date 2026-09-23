@@ -1169,10 +1169,8 @@ function renderFrater() {
         <input type="checkbox" ${S.notify.meals ? "checked" : ""} onchange="S.notify.meals=this.checked;save()">
         <b>Refeições</b><small>Café, almoço e jantar no horário selado.</small>
       </label>
-      <div class="row2">
-        <label class="field"><span>Café</span><input type="time" value="${S.notify.cafe}" onchange="S.notify.cafe=this.value;save()"></label>
-        <label class="field"><span>Almoço</span><input type="time" value="${S.notify.almoco}" onchange="S.notify.almoco=this.value;save()"></label>
-      </div>
+      <label class="field"><span>Café</span><input type="time" value="${S.notify.cafe}" onchange="S.notify.cafe=this.value;save()"></label>
+      <label class="field"><span>Almoço</span><input type="time" value="${S.notify.almoco}" onchange="S.notify.almoco=this.value;save()"></label>
       <label class="field"><span>Jantar</span><input type="time" value="${S.notify.jantar}" onchange="S.notify.jantar=this.value;save()"></label>
       <label class="dose ${S.notify.peso ? "on" : ""}">
         <input type="checkbox" ${S.notify.peso ? "checked" : ""} onchange="S.notify.peso=this.checked;save()">

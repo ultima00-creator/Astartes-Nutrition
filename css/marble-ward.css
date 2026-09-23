@@ -1,11 +1,22 @@
+/* Mármore + adereços. Sem glifo que vire letra A. */
 body {
   background:
     radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.5), transparent 34%),
+    radial-gradient(ellipse at 82% 18%, rgba(160,140,110,.16), transparent 32%),
     repeating-linear-gradient(118deg, rgba(90,70,50,.03) 0 1px, transparent 1px 12px),
     linear-gradient(165deg, #f6efe3 0%, #e8ddd0 42%, #efe6d6 100%) !important;
 }
 body::before { opacity: .18 !important; }
+body::after {
+  content: "";
+  pointer-events: none;
+  position: fixed; inset: 0; z-index: 0;
+  opacity: .1;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='v'><feTurbulence type='turbulence' baseFrequency='.04 .11' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.3  0 0 0 0 0.22  0 0 0 .3 0'/></filter><rect width='100%' height='100%' filter='url(%23v)'/></svg>");
+}
 .app, main, .page { position: relative; z-index: 1; }
+
 .topbar {
   position: sticky;
   z-index: 40 !important;
@@ -21,6 +32,8 @@ body::before { opacity: .18 !important; }
   background: linear-gradient(#f4ead8, rgba(244,234,216,0));
   pointer-events: none;
 }
+
+/* Cantos de caixa voltam a ser filete — não ícone */
 .ornate::before,
 .ornate::after {
   width: 14px !important;
@@ -30,11 +43,14 @@ body::before { opacity: .18 !important; }
 }
 .ornate::before { border-right: 0 !important; border-bottom: 0 !important; }
 .ornate::after { border-left: 0 !important; border-top: 0 !important; }
+
 .ornate {
   background:
     radial-gradient(ellipse at 12% 8%, rgba(255,255,255,.42), transparent 40%),
     linear-gradient(165deg, #faf4e8, #eee4d4 55%, #e6d8c4) !important;
 }
+
+.sigil { position: relative; }
 .sigil::before,
 .sigil::after {
   content: "";
@@ -42,12 +58,15 @@ body::before { opacity: .18 !important; }
   flex: 0 0 18px;
   opacity: .8;
 }
+/* Escudo */
 .sigil::before {
   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='none' stroke='%237a6248' stroke-width='1.6' d='M12 2.5 L20 6 v6.5 c0 5-8 9-8 9 s-8-4-8-9 V6 Z'/></svg>") no-repeat center / contain;
 }
+/* Espada vertical com guarda — não triângulo/A */
 .sigil::after {
   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='none' stroke='%237a6248' stroke-width='1.6' d='M12 2 v14 M8 15 h8 M12 16 v5 M9.5 21 h5'/></svg>") no-repeat center / contain;
 }
+
 .nav button[data-go="page-relato"]::before,
 .nav button[data-go="page-frater"]::before {
   content: "";
