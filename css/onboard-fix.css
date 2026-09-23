@@ -1,4 +1,4 @@
-/* Topbar opaca — o texto do card não atravessa o selo */
+/* Topbar opaca */
 .topbar {
   background: #f4ead8 !important;
   box-shadow: 0 16px 20px #f4ead8 !important;
@@ -11,3 +11,18 @@ body:has(#page-onboard.active) .nav { display: none; }
 body.onboard .app,
 body:has(#page-onboard.active) .app { padding-bottom: 16px; }
 body:has(#page-onboard.active) .splash { padding-bottom: 32px; }
+
+.ornate, .card, label.field, .row2 { min-width: 0; max-width: 100%; }
+.row2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; }
+input, select, textarea {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+input[type="time"],
+input[type="number"] {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  display: block;
+}
