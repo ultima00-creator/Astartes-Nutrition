@@ -390,7 +390,6 @@ function show(id) {
   if (id === "page-alimentos") renderAlimentos();
   if (id === "page-relato") renderRelato();
   if (id === "page-frater") renderFrater();
-  if (id === "page-apothecary" && window.renderApothecary) window.renderApothecary();
 }
 
 function renderAll() {
@@ -508,8 +507,6 @@ function renderDiario() {
     </div>
     <div style="display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap">
       <button class="btn ghost" onclick="copyYesterday()">Copiar ontem</button>
-      <button class="btn ghost" onclick="openEscriba()">Câmera · Grok</button>
-      <button class="btn ghost" onclick="show('page-apothecary')">Apothecary</button>
     </div>
     <section class="ornate card">
       <h3>Resumo de Energia<span>Consumido · Gastos · Restante</span></h3>
@@ -753,9 +750,6 @@ function renderBusca(q="") {
       ${MEALS.map(m=>`<span class="chip ${m.id===pendingMeal?'on':''}" onclick="pendingMeal='${m.id}';renderBusca(document.getElementById('q').value)">${m.name}</span>`).join("")}
     </div>
     <div class="search"><input id="q" placeholder="Ex.: patinho moída 300g" value="${q}" oninput="renderBusca(this.value)"></div>
-    <div style="display:flex;gap:8px;margin:8px 0">
-      <button class="btn ghost" style="margin:0" onclick="openEscriba()">Câmera · Grok</button>
-    </div>
     <div style="margin:8px 0">${cats.map(c=>`<span class="chip ${c===filterCat?'on':''}" onclick="filterCat='${c}';renderBusca(document.getElementById('q').value)">${c}</span>`).join("")}</div>
     <div class="list">${shown.slice(0,80).map(f=>`
       <div class="item" onclick="pickFood('${f.id}')">
@@ -1125,18 +1119,13 @@ function renderFrater() {
       <p class="quote">Isto é sino local via service worker. Push remoto (chegar com o app morto no iPhone) pede servidor APNs — o Códice ainda não tem retaguarda.</p>
     </section>
     <section class="ornate card">
-      <h3>Escriba Grok<span>Câmera do prato · facultativo</span></h3>
-      <p class="muted">A chave fica só neste aparelho. Sem ela a câmera não identifica o prato. SuperGrok do chat não substitui esta porta.</p>
-      <label class="field"><span>Chave API (console.x.ai)</span>
-        <input id="xai-key" type="password" autocomplete="off" placeholder="${(localStorage.getItem("astartes_xai_key")||"").trim() ? "•••• já selada" : "xai-..."}">
+      <h3>Selo do Servitor<span>JSON do bot · o Códice aplica</span></h3>
+      <p class="muted">Cole o bloco que o Apothecary Servitor devolver. Prato-receita tem que vir desmembrado (batata + camarão + queijo), nunca um único q.</p>
+      <label class="field"><span>Código</span>
+        <textarea id="bot-seal" placeholder='{"v":1,"date":"2026-09-23","meals":{"almoco":[{"q":"batata inglesa cozida","g":200},{"q":"camarão cozido","g":80}]}}'></textarea>
       </label>
-      <button class="btn" onclick="(window.saveGrokKey||function(){const v=($('#xai-key').value||'').trim(); if(v)localStorage.setItem('astartes_xai_key',v); else localStorage.removeItem('astartes_xai_key'); alert(v?'Chave selada.':'Chave removida.');})()">Selar chave</button>
-      <button class="btn ghost" onclick="openEscriba()">Abrir câmera</button>
-    </section>
-    <section class="ornate card">
-      <h3>Apothecary Advisor<span>Plano e substituição · micros inclusos</span></h3>
-      <p class="muted">Facultativo. O Códice monta o plano pela TBCA. O Grok só aconselha se a chave estiver selada.</p>
-      <button class="btn" onclick="show('page-apothecary')">Abrir o Apothecarion</button>
+      <button class="btn" onclick="importBotSeal()">Aplicar no Diarium</button>
+      <p class="muted" id="bot-seal-msg"></p>
     </section>
     <section class="ornate card install-hint">
       <h3>Instalar o Códice<span>PWA v${APP_VER}</span></h3>
@@ -1401,6 +1390,39 @@ window.exportData = function() {
   a.href = URL.createObjectURL(blob);
   a.download = "astartes-nutrition.json";
   a.click();
+};
+window.importBotSeal = function() {
+  const box = document.getElementById("bot-seal");
+  const msg = document.getElementById("bot-seal-msg");
+  let raw = (box && box.value || "").trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+  let data;
+  try { data = JSON.parse(raw); } catch (e) {
+    if (msg) msg.textContent = "JSON inválido.";
+    return;
+  }
+  const date = data.date || today();
+  if (!data.meals) { if (msg) msg.textContent = "Falta meals."; return; }
+  const d = dayObj(date);
+  const keys = ["cafe", "almoco", "jantar", "lanches"];
+  let nAdd = 0, miss = [];
+  keys.forEach(k => {
+    (data.meals[k] || []).forEach(it => {
+      let f = it.id ? foodById(it.id) : null;
+      if (!f && it.q && typeof rankEscriba === "function") {
+        const hits = rankEscriba(it.q);
+        f = hits[0];
+        if (hits[1] && foodScore(hits[1], it.q) - foodScore(hits[0], it.q) < 30) f = null;
+      }
+      if (!f) { miss.push(it.q || it.id || "?"); return; }
+      d[k].push(scaleFood(f, Number(it.g || it.grams || 100)));
+      nAdd++;
+    });
+  });
+  save();
+  if (msg) msg.textContent = nAdd
+    ? (nAdd + " rações em " + date + (miss.length ? ". Sem match: " + miss.join(", ") : "."))
+    : ("Nada aplicado." + (miss.length ? " Sem match: " + miss.join(", ") : ""));
+  if (nAdd) show("page-diario");
 };
 window.doInstall = async function() {
   if (!installEvt) return;
