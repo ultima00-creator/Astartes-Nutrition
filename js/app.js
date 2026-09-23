@@ -380,7 +380,9 @@ function scaleFood(f, grams) {
   const k = grams / 100;
   return {
     grams, name: f.name, id: f.id,
-    kcal: n(f.kcal) * k, p: n(f.p) * k, carbs: n(f.c) * k, f: n(f.f) * k,
+    kcal: n(f.kcal) * k, p: n(f.p) * k,
+    pAnimal: isAnimalFood(f) ? n(f.p) * k : 0,
+    carbs: n(f.c) * k, f: n(f.f) * k,
     fiber: n(f.fiber) * k, sugar: n(f.sugar) * k, sat: n(f.sat) * k,
     chol: n(f.chol) * k, na: n(f.na) * k, ca: n(f.ca) * k,
     fe: n(f.fe) * k, mg: n(f.mg) * k, zn: n(f.zn) * k,
@@ -392,14 +394,30 @@ function scaleFood(f, grams) {
 }
 function n(v) { return v == null || v === "" ? 0 : Number(v); }
 
+function isAnimalFood(f) {
+  if (!f) return false;
+  if (f.animal === true) return true;
+  if (f.animal === false) return false;
+  const cat = foldTxt(f.cat || "");
+  if (/carne|pescad|laticin|ovo/.test(cat)) return true;
+  const n = foldTxt(f.name || "");
+  return /whey|caseina|casein|\bleite\b|queijo|iogurte|coalhada|\bovo|ovos|frango|bovina|suina|porco|patinho|acem|peixe|camarao|atum|salmao|sardinha|carne|peru|mucarela|requeijao|presunto|bacon|linguica|salsicha/.test(n);
+}
+function entryAnimalP(e) {
+  if (e && e.pAnimal != null) return n(e.pAnimal);
+  return isAnimalFood(e) || (e && e.id && isAnimalFood(foodById(e.id))) ? n(e.p) : 0;
+}
 function sumDay(date) {
   const d = dayObj(date);
   const acc = emptyNut();
-  MEALS.forEach(m => (d[m.id] || []).forEach(e => addNut(acc, e)));
+  MEALS.forEach(m => (d[m.id] || []).forEach(e => {
+    addNut(acc, e);
+    acc.pAnimal += entryAnimalP(e);
+  }));
   return acc;
 }
 function emptyNut() {
-  return { kcal:0,p:0,carbs:0,f:0,fiber:0,sugar:0,sat:0,chol:0,na:0,ca:0,fe:0,mg:0,zn:0,k:0,phos:0,se:0,a:0,c_vit:0,d:0,e:0,k_vit:0,b1:0,b2:0,b3:0,b6:0,b12:0,fol:0 };
+  return { kcal:0,p:0,pAnimal:0,carbs:0,f:0,fiber:0,sugar:0,sat:0,chol:0,na:0,ca:0,fe:0,mg:0,zn:0,k:0,phos:0,se:0,a:0,c_vit:0,d:0,e:0,k_vit:0,b1:0,b2:0,b3:0,b6:0,b12:0,fol:0 };
 }
 function addNut(a, e) {
   Object.keys(a).forEach(k => { a[k] += n(e[k]); });
@@ -465,7 +483,7 @@ function renderOnboard() {
             <option value="bulk">Bulk-up · GET + mínimo 250 kcal</option>
           </select>
         </label>
-        <p class="field-lab">Proteína do soldado enhanced</p>
+        <p class="field-lab">Proteína animal do soldado enhanced</p>
         <div class="doses">${protPicker("proteinPerKg", 1.8)}</div>
         <button class="btn" type="submit">Forjar o Capítulo</button>
       </form>
@@ -558,7 +576,8 @@ function renderDiario() {
     <section class="ornate card bars">
       <h3>Metas de Macronutrientes<span>${t.phase === "high" ? "Dia ALTO · GET" : t.phase === "low" ? "Dia BAIXO · 70% GET" : "Doutrina da ração diária"}</span></h3>
       ${bar("Energia", sum.kcal, t.kcal, "kcal")}
-      ${bar("Proteína", sum.p, t.prot, "g", "p")}
+      ${bar("Proteína animal", sum.pAnimal, t.prot, "g", "p")}
+      ${sum.p - sum.pAnimal > 0.5 ? `<p class="muted">P vegetal ${fmt(sum.p - sum.pAnimal,1)} g — fora da cota do soldado.</p>` : ""}
       ${bar("Carboidratos", sum.carbs, t.carb, "g", "c")}
       ${bar("Gordura", sum.f, t.fat, "g", "f")}
     </section>
@@ -882,6 +901,11 @@ window.formCustom = function() {
       <label class="field"><span>Fibra</span><input id="cfi" type="number" step="0.1"></label>
       <label class="field"><span>Sódio mg</span><input id="cna" type="number"></label>
     </div>
+    <label class="dose">
+      <input type="checkbox" id="canimal" checked>
+      <b>Proteína animal</b>
+      <small>Só entra na cota 1,5 / 1,8 / 2,0 g/kg se marcado.</small>
+    </label>
     <button class="btn" onclick="saveCustom()">Selar no Códice</button>
     <button class="btn ghost" onclick="closeModal()">Cancelar</button>
   </div>`;
@@ -893,7 +917,8 @@ window.saveCustom = function() {
     id: "c-" + Date.now(), name, cat: $("#cc").value || "Custom",
     kcal: +$("#ck").value || 0, p: +$("#cp").value || 0, c: +$("#ccarb").value || 0,
     f: +$("#cf").value || 0, fiber: +$("#cfi").value || 0, na: +$("#cna").value || 0,
-    servings: [{ n: "100 g", g: 100 }]
+    servings: [{ n: "100 g", g: 100 }],
+    animal: !!(document.getElementById("canimal") && document.getElementById("canimal").checked)
   });
   save(); closeModal(); renderAlimentos();
 };
@@ -953,7 +978,7 @@ function renderRelato() {
   }
   const rows = [
     ["Energia", sum.kcal, t.kcal, "kcal"],
-    ["Proteína", sum.p, t.prot, "g"],
+    ["Proteína animal", sum.pAnimal, t.prot, "g"],
     ["Carboidratos", sum.carbs, t.carb, "g"],
     ["Gordura", sum.f, t.fat, "g"],
     ["Fibra", sum.fiber, DRI.fiber, "g"],
@@ -1049,7 +1074,7 @@ function renderFrater() {
         <tr><td>TMB</td><td>${t.tmb} kcal</td></tr>
         <tr><td>GET (TMB × atividade)</td><td>${t.get} kcal</td></tr>
         <tr><td>Meta do objetivo</td><td>${t.kcal} kcal${p.goal==="bulk" ? ` (+${t.surplus})` : t.phase === "high" ? " · CHO alto = GET" : t.phase === "low" ? " · CHO baixo = 70% GET" : p.goal==="cut" ? ` (−${t.deficit})` : p.goal==="break" ? " · GET" : ""}</td></tr>
-        <tr><td>Proteína</td><td>${t.prot} g</td></tr>
+        <tr><td>Proteína animal</td><td>${t.prot} g</td></tr>
         <tr><td>Carboidrato</td><td>${t.carb} g</td></tr>
         <tr><td>Gordura</td><td>${t.fat} g</td></tr>
       </table>
@@ -1061,7 +1086,7 @@ function renderFrater() {
         <label class="field"><span>Idade</span><input id="pa" type="number" value="${p.age}"></label>
       </div>
       <label class="field"><span>Altura cm</span><input id="ph" type="number" value="${p.height}"></label>
-      <p class="field-lab">Proteína do soldado enhanced</p>
+      <p class="field-lab">Proteína animal do soldado enhanced</p>
       <div class="doses">${protPicker("pp", p.proteinPerKg)}</div>
       <label class="field"><span>Atividade</span><select id="pac">${act}</select></label>
       <label class="field"><span>Objetivo</span>
