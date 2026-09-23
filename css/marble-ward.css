@@ -1,82 +1,64 @@
-/* Mármore imperial + lâmina e escudo */
 body {
   background:
-    radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.55), transparent 34%),
-    radial-gradient(ellipse at 82% 18%, rgba(160,140,110,.18), transparent 32%),
-    radial-gradient(ellipse at 40% 70%, rgba(90,70,50,.10), transparent 42%),
-    radial-gradient(ellipse at 70% 88%, rgba(255,255,255,.28), transparent 36%),
-    repeating-linear-gradient(118deg, rgba(90,70,50,.035) 0 1px, transparent 1px 11px),
-    repeating-linear-gradient(62deg, rgba(255,255,255,.12) 0 1px, transparent 1px 17px),
-    linear-gradient(165deg, #f6efe3 0%, #e8ddd0 38%, #d9cbb8 72%, #efe6d6 100%) !important;
+    radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.5), transparent 34%),
+    repeating-linear-gradient(118deg, rgba(90,70,50,.03) 0 1px, transparent 1px 12px),
+    linear-gradient(165deg, #f6efe3 0%, #e8ddd0 42%, #efe6d6 100%) !important;
 }
-body::before {
-  opacity: .28 !important;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='5' seed='7'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.28  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>") !important;
-}
-body::after {
-  content: "";
-  pointer-events: none;
-  position: fixed; inset: 0; z-index: 0;
-  opacity: .14;
-  mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='v'><feTurbulence type='turbulence' baseFrequency='.035 .12' numOctaves='3' seed='3'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.3  0 0 0 0 0.22  0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23v)'/></svg>");
-}
+body::before { opacity: .18 !important; }
 .app, main, .page { position: relative; z-index: 1; }
-
+.topbar {
+  position: sticky;
+  z-index: 40 !important;
+  isolation: isolate;
+  background: #f4ead8 !important;
+  box-shadow: 0 14px 18px #f4ead8 !important;
+}
+.topbar::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -16px;
+  height: 16px;
+  background: linear-gradient(#f4ead8, rgba(244,234,216,0));
+  pointer-events: none;
+}
+.ornate::before,
+.ornate::after {
+  width: 14px !important;
+  height: 14px !important;
+  background: none !important;
+  border: 1px solid #3a3126 !important;
+}
+.ornate::before { border-right: 0 !important; border-bottom: 0 !important; }
+.ornate::after { border-left: 0 !important; border-top: 0 !important; }
 .ornate {
   background:
-    radial-gradient(ellipse at 12% 8%, rgba(255,255,255,.5), transparent 40%),
-    radial-gradient(ellipse at 88% 90%, rgba(120,100,80,.12), transparent 42%),
-    linear-gradient(165deg, #faf4e8, #eee4d4 55%, #e4d6c2) !important;
+    radial-gradient(ellipse at 12% 8%, rgba(255,255,255,.42), transparent 40%),
+    linear-gradient(165deg, #faf4e8, #eee4d4 55%, #e6d8c4) !important;
 }
-.ornate::before {
-  width: 18px; height: 18px;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path fill='none' stroke='%233a3126' stroke-width='1.4' d='M16 3 L26 8 V18 C26 24 16 29 16 29 C16 29 6 24 6 18 V8 Z'/><path fill='none' stroke='%237a6248' stroke-width='1.1' d='M16 7 L22 10 V17 C22 21 16 25 16 25 C16 25 10 21 10 17 V10 Z'/></svg>") no-repeat center / 16px 16px;
-  border: 0;
-}
-.ornate::after {
-  width: 18px; height: 18px;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path fill='none' stroke='%233a3126' stroke-width='1.4' d='M8 26 L16 6 L24 26 M12 18 H20'/><circle cx='16' cy='27' r='1.4' fill='%237a6248'/></svg>") no-repeat center / 16px 16px;
-  border: 0;
-}
-
-.sigil { position: relative; }
 .sigil::before,
 .sigil::after {
   content: "";
-  width: 22px; height: 22px;
-  flex: 0 0 22px;
-  opacity: .75;
+  width: 18px; height: 18px;
+  flex: 0 0 18px;
+  opacity: .8;
 }
 .sigil::before {
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path fill='none' stroke='%237a6248' stroke-width='1.5' d='M16 2 L28 8 V19 C28 25 16 30 16 30 C16 30 4 25 4 19 V8 Z'/><path fill='none' stroke='%233a3126' stroke-width='1.2' d='M16 6 L24 10 V18 C24 23 16 27 16 27 C16 27 8 23 8 18 V10 Z'/><path stroke='%237a6248' stroke-width='1.2' d='M16 11 V22'/></svg>") no-repeat center / contain;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='none' stroke='%237a6248' stroke-width='1.6' d='M12 2.5 L20 6 v6.5 c0 5-8 9-8 9 s-8-4-8-9 V6 Z'/></svg>") no-repeat center / contain;
 }
 .sigil::after {
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path fill='none' stroke='%237a6248' stroke-width='1.5' d='M10 28 L16 4 L22 28 M12 18 H20'/><path fill='%237a6248' d='M14 28 H18 V30 H14 Z'/></svg>") no-repeat center / contain;
-}
-
-.topbar {
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.45), transparent 60%),
-    #f4ead8 !important;
-}
-.nav {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.08), transparent),
-    #2b1d12 !important;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='none' stroke='%237a6248' stroke-width='1.6' d='M12 2 v14 M8 15 h8 M12 16 v5 M9.5 21 h5'/></svg>") no-repeat center / contain;
 }
 .nav button[data-go="page-relato"]::before,
 .nav button[data-go="page-frater"]::before {
   content: "";
   display: block;
-  width: 12px; height: 12px;
+  width: 11px; height: 11px;
   margin: 0 auto 2px;
-  opacity: .7;
+  opacity: .75;
 }
 .nav button[data-go="page-relato"]::before {
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path fill='none' stroke='%23d4c4a4' stroke-width='2' d='M16 3 L27 8 V18 C27 24 16 29 16 29 C16 29 5 24 5 18 V8 Z'/></svg>") no-repeat center / contain;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='none' stroke='%23d4c4a4' stroke-width='2' d='M12 2.5 L20 6 v6.5 c0 5-8 9-8 9 s-8-4-8-9 V6 Z'/></svg>") no-repeat center / contain;
 }
 .nav button[data-go="page-frater"]::before {
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path fill='none' stroke='%23d4c4a4' stroke-width='2' d='M8 26 L16 5 L24 26 M12 17 H20'/></svg>") no-repeat center / contain;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='none' stroke='%23d4c4a4' stroke-width='2' d='M12 2 v14 M8 15 h8 M12 16 v5 M9.5 21 h5'/></svg>") no-repeat center / contain;
 }
