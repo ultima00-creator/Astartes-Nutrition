@@ -14,6 +14,10 @@ body:has(#page-onboard.active) .splash { padding-bottom: 32px; }
 
 .ornate, .card, label.field, .row2 { min-width: 0; max-width: 100%; }
 .row2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; }
+.row2:has(input[type="time"]) {
+  display: block !important;
+  grid-template-columns: none !important;
+}
 input, select, textarea {
   max-width: 100%;
   min-width: 0;
@@ -25,4 +29,6 @@ input[type="number"] {
   min-width: 0;
   max-width: 100%;
   display: block;
+  -webkit-appearance: none;
+  appearance: none;
 }
