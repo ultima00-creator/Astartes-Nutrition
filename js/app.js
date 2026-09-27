@@ -621,6 +621,7 @@ function renderDiario() {
     </div>
     <div style="display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap">
       <button class="btn ghost" onclick="copyYesterday()">Copiar ontem</button>
+      <button class="btn" onclick="openMontar()">Montar dieta</button>
     </div>
     <section class="ornate card">
       <h3>Resumo de Energia<span>Consumido · Gastos · Restante</span></h3>
@@ -869,16 +870,30 @@ function foodScore(f, q) {
   if (/grelhad|cozid|refogad|cru/.test(n) && !/papa/.test(n)) s -= 25;
   return s;
 }
+function remainHud() {
+  if (!S.profile) return "";
+  const t = targets(S.profile, viewDate);
+  const s = sumDay(viewDate);
+  const rk = t.kcal - s.kcal, rp = t.prot - (s.pAnimal || 0), rc = t.carb - s.carbs, rf = t.fat - s.f;
+  return `<p class="quote" style="font-size:12px;margin:6px 0">Restante: ${fmt(rk)} kcal · P animal ${fmt(rp,0)} g · C ${fmt(rc,0)} g · G ${fmt(rf,0)} g · Fe ${fmt(s.fe,1)}/${DRI.fe} · Zn ${fmt(s.zn,1)}/${DRI.zn}</p>`;
+}
+window.openMontar = function() {
+  window._montar = true;
+  if (!ensureRefeicoes(dayObj(viewDate)).length) addMeal();
+  openAdd(pendingMeal || 0);
+};
 function renderBusca(q="") {
   const foods = allFoods().filter(f => foodMatches(f, q));
   const cats = ["Todos", ...Array.from(new Set(allFoods().map(f => f.cat).filter(Boolean)))];
   const shown = (filterCat === "Todos" ? foods : foods.filter(f => f.cat === filterCat))
     .slice().sort((a,b) => foodScore(a,q) - foodScore(b,q));
   $("#modal").innerHTML = `<div class="sheet ornate">
-    <h3 class="display" style="text-align:center;margin:6px 0 10px">Rationes</h3>
+    <h3 class="display" style="text-align:center;margin:6px 0 10px">${window._montar ? "Montar dieta" : "Rationes"}</h3>
+    ${remainHud()}
     <p class="muted" style="text-align:center">Lançar em: <b>${mealTitle(+pendingMeal)}</b></p>
     <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:8px 0">
       ${ensureRefeicoes(dayObj(viewDate)).map((_,i)=>`<span class="chip ${i===+pendingMeal?'on':''}" onclick="pendingMeal=${i};renderBusca(document.getElementById('q').value)">${mealTitle(i)}</span>`).join("")}
+      <span class="chip" onclick="addMeal()">+ refeição</span>
     </div>
     <div class="search"><input id="q" placeholder="Ex.: patinho moída 300g" value="${q}" oninput="renderBusca(this.value)"></div>
     <div style="margin:8px 0">${cats.map(c=>`<span class="chip ${c===filterCat?'on':''}" onclick="filterCat='${c}';renderBusca(document.getElementById('q').value)">${c}</span>`).join("")}</div>
@@ -909,8 +924,9 @@ window.pickFood = function(id) {
     <label class="field"><span>Refeição</span>
       <select id="meal">${ensureRefeicoes(dayObj(viewDate)).map((_,i)=>`<option value="${i}" ${i===+pendingMeal?"selected":""}>${mealTitle(i)}</option>`).join("")}</select>
     </label>
-    <button class="btn" onclick="confirmFood('${f.id}')">Lançar no Diarium</button>
-    <button class="btn ghost" onclick="renderBusca()">Voltar</button>
+    ${remainHud()}
+    <button class="btn" onclick="confirmFood('${f.id}')">${window._montar ? "Lançar e seguir" : "Lançar no Diarium"}</button>
+    <button class="btn ghost" onclick="renderBusca()">Voltar à busca</button>
   </div>`;
 };
 window.confirmFood = function(id) {
@@ -920,9 +936,15 @@ window.confirmFood = function(id) {
   pendingMeal = meal;
   const e = scaleFood(f, g);
   mealItems(dayObj(viewDate), meal).push(e);
-  save(); closeModal(); show("page-diario");
+  save();
+  if (window._montar) { renderBusca(); return; }
+  closeModal(); show("page-diario");
 };
-window.closeModal = function() { $("#modal").classList.remove("open"); $("#modal").innerHTML = ""; };
+window.closeModal = function() {
+  window._montar = false;
+  $("#modal").classList.remove("open");
+  $("#modal").innerHTML = "";
+};
 
 function renderAlimentos() {
   $("#page-alimentos").innerHTML = `
@@ -1278,7 +1300,7 @@ function renderFrater() {
     </section>
     <section class="ornate card">
       <h3>Selo do Servitor<span>JSON do bot · o Códice aplica</span></h3>
-      <p class="muted">Cole o JSON. TBCA casa pelo q. O que não estiver na tabela precisa de per100 (kcal/p/c/f por 100 g ou ml) e vira custom.</p>
+      <p class="muted">Dieta completa do Servitor: meals "1","2","3"… Ou monte no Diarium (Montar dieta) pela TBCA. Fora da tabela exige per100.</p>
       <label class="field"><span>Código</span>
         <textarea id="bot-seal" placeholder='{"v":1,"date":"2026-09-26","meals":{"1":[{"q":"Monster Mango Loco","g":473,"liquid":true,"per100":{"kcal":47,"c":12,"caf":32,"tau":80}}]}}'></textarea>
       </label>
