@@ -1,4 +1,4 @@
-const CACHE = "astartes-v7";
+const CACHE = "astartes-v8";
 const ASSETS = [
   "./",
   "./index.html",
@@ -13,6 +13,7 @@ const ASSETS = [
   "./assets/icon-512.png",
   "./assets/apple-touch-icon.png",
   "./assets/orn-skull.svg",
+  "./assets/orn-skull.png",
   "./assets/orn-sword.svg",
   "./assets/orn-shield.svg",
   "./assets/orn-sword.png",

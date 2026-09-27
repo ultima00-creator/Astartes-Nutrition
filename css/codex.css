@@ -143,16 +143,21 @@ textarea { min-height: 70px; }
 .btn {
   display: block; width: 100%; text-align: center; padding: 12px 14px; margin: 10px 0 0;
   background:
-    linear-gradient(180deg, rgba(255,210,210,.28) 0%, transparent 32%),
-    repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 3px),
-    linear-gradient(180deg, #b4232c 0%, #7a141c 48%, #4a0b11 100%);
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(255,236,232,.55), transparent 58%),
+    linear-gradient(180deg,
+      #e36a66 0%,
+      #c4333a 16%,
+      #8e1a22 46%,
+      #5a0e14 78%,
+      #7a1c24 100%);
   color: #f8ead0;
-  border: 1px solid #d4a44a;
+  border: 1px solid #e0c07a;
   font-family: Cinzel, serif; letter-spacing: .16em;
   font-size: 12px; text-transform: uppercase;
   box-shadow:
-    inset 0 1px 0 rgba(255,210,210,.38),
-    inset 0 -2px 4px rgba(20,0,0,.45),
+    inset 0 1px 0 rgba(255,240,230,.55),
+    inset 0 -1px 0 rgba(255,170,170,.18),
+    inset 0 -3px 6px rgba(20,0,0,.35),
     0 2px 0 #2a070a;
   text-shadow: 0 1px 0 rgba(0,0,0,.45);
 }
@@ -184,11 +189,17 @@ textarea { min-height: 70px; }
   display: grid; grid-template-columns: 1fr 1fr 56px 1fr 1fr;
   max-width: 520px; margin: 0 auto;
   background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 4px),
-    linear-gradient(180deg, #9a1e26 0%, #5c1016 42%, #2e080c 100%);
+    radial-gradient(ellipse 80% 70% at 50% -20%, rgba(255,200,190,.28), transparent 55%),
+    linear-gradient(180deg,
+      #c43a40 0%,
+      #8a1a22 28%,
+      #5c1016 62%,
+      #3a0a0e 100%);
   color: #f0d9a8; padding-bottom: var(--safe-b);
-  border-top: 2px solid #d4a44a;
-  box-shadow: inset 0 1px 0 rgba(255,190,190,.25);
+  border-top: 2px solid #e0c07a;
+  box-shadow:
+    inset 0 1px 0 rgba(255,230,220,.4),
+    inset 0 -8px 14px rgba(0,0,0,.28);
 }
 .nav button {
   background: none; border: 0; color: #f0d4b0; font-family: Cinzel, serif;
@@ -198,11 +209,12 @@ textarea { min-height: 70px; }
 .nav .plus {
   width: 56px; height: 56px; margin-top: -18px; border-radius: 50%;
   background:
-    radial-gradient(circle at 36% 28%, #e8c56a, #c42a32 42%, #5c1016 78%);
+    radial-gradient(circle at 32% 26%, #f2d48a 0%, #e05a4a 28%, #b4232c 58%, #5c1016 100%);
   color: #f8edd2; border: 2px solid #f3e6c8; font-size: 28px; line-height: 1;
   font-family: Cinzel, serif;
   box-shadow:
-    inset 0 2px 0 rgba(255,230,200,.35),
+    inset 0 3px 0 rgba(255,240,220,.45),
+    inset 0 -3px 6px rgba(40,0,0,.35),
     0 4px 10px rgba(40,0,0,.4);
 }
 .modal {
