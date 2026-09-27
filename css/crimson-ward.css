@@ -1,4 +1,4 @@
-/* Carmesim metálico + heráldica (livro / caveira / escudo-olho / espada serrilhada) */
+/* Codex:Munitorum — selos do Astartes:Program */
 
 .sigil { position: relative; }
 .sigil::before,
@@ -19,51 +19,52 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+  border-radius: 4px;
 }
 .orn-shield {
-  width: 28px;
-  height: 34px;
-  background-image: url("../assets/orn-shield.png");
+  width: 32px;
+  height: 32px;
+  background-image: url("../assets/mark-aquila.png");
 }
 .orn-sword {
-  width: 20px;
-  height: 36px;
-  background-image: url("../assets/orn-sword.png");
+  width: 32px;
+  height: 32px;
+  background-image: url("../assets/mark-swords.png");
 }
 .title-skull {
-  width: 168px;
-  height: 46px;
-  margin: 2px auto 0;
-  background: url("../assets/orn-skull.png") no-repeat center / contain;
-  opacity: .95;
+  width: 52px;
+  height: 52px;
+  margin: 4px auto 0;
+  background: url("../assets/seal-munitorum.png") no-repeat center / contain;
+  opacity: .98;
 }
 
 .splash .sigil { margin-bottom: 6px; }
-.splash .orn-shield { width: 34px; height: 42px; }
-.splash .orn-sword { width: 24px; height: 44px; }
-.splash .title-skull { width: 210px; height: 56px; }
+.splash .orn-shield { width: 40px; height: 40px; }
+.splash .orn-sword { width: 40px; height: 40px; }
+.splash .title-skull { width: 72px; height: 72px; }
 
-.nav button[data-go="page-relato"]::before,
-.nav button[data-go="page-frater"]::before {
+.nav button[data-go]::before {
   content: "";
   display: block;
+  width: 18px;
+  height: 18px;
   margin: 0 auto 3px;
-  opacity: .95;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
 }
 .nav button[data-go="page-relato"]::before {
-  width: 16px;
-  height: 18px;
-  background-image: url("../assets/orn-shield.svg");
-  filter: brightness(1.25) saturate(.85);
+  background-image: url("../assets/mark-eagle.png");
+}
+.nav button[data-go="page-diario"]::before {
+  background-image: url("../assets/mark-skull.png");
+}
+.nav button[data-go="page-alimentos"]::before {
+  background-image: url("../assets/mark-gear.png");
 }
 .nav button[data-go="page-frater"]::before {
-  width: 12px;
-  height: 20px;
-  background-image: url("../assets/orn-sword.svg");
-  filter: brightness(1.25) saturate(.85);
+  background-image: url("../assets/mark-mech.png");
 }
 
 .dose.on {

@@ -1,7 +1,7 @@
 {
-  "name": "Astartes Nutrition",
-  "short_name": "Astartes",
-  "description": "Calculadora de TMB, tracker de dieta e códice de rações.",
+  "name": "Codex:Munitorum",
+  "short_name": "Munitorum",
+  "description": "Códice de rações, TMB e desempenho do Astartes:Program.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

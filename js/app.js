@@ -517,7 +517,7 @@ function renderOnboard() {
         <div class="sigil-row">
           <i class="orn-shield" aria-hidden="true"></i>
           <div class="titles">
-            <small>Codex Astartes</small><strong>Astartes Nutrition</strong>
+            <small>Astartes:Program</small><strong>Codex:Munitorum</strong>
           </div>
           <i class="orn-sword" aria-hidden="true"></i>
         </div>
@@ -1317,7 +1317,7 @@ function renderFrater() {
     <section class="ornate card install-hint">
       <h3>Instalar o Códice<span>PWA v${APP_VER}</span></h3>
       <p>iPhone: Safari → Compartilhar → <b>Adicionar à Tela de Início</b>. Android: o banner “Instalar”, se aparecer.</p>
-      <button class="btn" id="btn-install" style="display:none" onclick="doInstall()">Instalar Astartes Nutrition</button>
+      <button class="btn" id="btn-install" style="display:none" onclick="doInstall()">Instalar Codex:Munitorum</button>
       <button class="btn" onclick="updateCodex()">Atualizar Códice (forçar nova versão)</button>
       <p class="muted" id="sw-status">Cache ${navigator.onLine ? "online" : "offline"}.</p>
       <button class="btn ghost" onclick="exportData()">Exportar dados (JSON)</button>
@@ -1485,7 +1485,7 @@ window.toggleNotify = async function(on) {
   S.notify.on = perm === "granted";
   save();
   if (S.notify.on) {
-    await fireNotify("Astartes Nutrition", "Sinais do Capítulo armados.", "hello", "page-diario");
+    await fireNotify("Codex:Munitorum", "Sinais do Munitorum armados.", "hello", "page-diario");
     tickNotify();
   } else if (perm === "denied") {
     alert("Permissão negada. No iPhone: Ajustes → Astartes → Notificações.");

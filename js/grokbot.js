@@ -38,7 +38,7 @@
   async function askGrok(dataUrl, hint) {
     const key = getKey();
     if (!key) throw new Error("sem-chave");
-    const prompt = `Você é o Escriba do Astartes Nutrition (PT-BR).
+    const prompt = `Você é o Escriba do Codex:Munitorum (PT-BR).
 Olhe o prato e devolva APENAS JSON válido, sem markdown:
 {"items":[{"q":"nome curto BR para buscar na TBCA","grams":numero ou null,"prep":"cru|refogado|grelhado|cozido|null","conf":0a1,"ask":"pergunta se estiver incerto ou vazio"}],"note":"uma linha"}
 Regras:

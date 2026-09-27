@@ -1,4 +1,4 @@
-const CACHE = "astartes-v8";
+const CACHE = "munitorum-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -64,8 +64,8 @@ self.addEventListener("notificationclick", e => {
 self.addEventListener("push", e => {
   let data = {};
   try { data = e.data ? e.data.json() : {}; } catch (err) { data = { body: e.data && e.data.text() }; }
-  e.waitUntil(self.registration.showNotification(data.title || "Astartes Nutrition", {
-    body: data.body || "Sinal do Capítulo.",
+  e.waitUntil(self.registration.showNotification(data.title || "Codex:Munitorum", {
+    body: data.body || "Sinal do Munitorum.",
     icon: "assets/icon-192.png",
     badge: "assets/icon-192.png",
     data: { go: data.go || "page-diario" }
