@@ -32,3 +32,18 @@ input[type="number"] {
   -webkit-appearance: none;
   appearance: none;
 }
+.track { height: 10px; }
+.track.kcal > i { background: linear-gradient(90deg, #ffcc4d, #e89412); }
+.track.p > i { background: linear-gradient(90deg, #ff4d4d, #c41e1e); }
+.track.c > i { background: linear-gradient(90deg, #5ad4ff, #1a8fd4); }
+.track.f > i { background: linear-gradient(90deg, #7dff6a, #2f9e1e); }
+.track.water > i { background: linear-gradient(90deg, #4db8ff, #1565c0); }
+.track.fiber > i { background: linear-gradient(90deg, #b8e986, #5a8f2f); }
+.track.sugar > i { background: linear-gradient(90deg, #ff8ad4, #c2187a); }
+.track.na > i { background: linear-gradient(90deg, #ffe566, #c9a000); }
+.track.ca > i { background: linear-gradient(90deg, #e8e8e8, #9aa0a6); }
+.track.fe > i { background: linear-gradient(90deg, #ff8a4d, #b33b00); }
+.track.zn > i { background: linear-gradient(90deg, #c9b8ff, #6b4fd4); }
+.track.min > i { background: linear-gradient(90deg, #4dffd2, #0f8f78); }
+.track.vit > i { background: linear-gradient(90deg, #d4a0ff, #7b2cbf); }
+.track.xtra > i { background: linear-gradient(90deg, #ffb347, #e05a00); }

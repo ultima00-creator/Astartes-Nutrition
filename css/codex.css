@@ -110,12 +110,23 @@ body:has(#page-onboard.active) .app { padding-bottom: 16px; }
 
 .bars .row { margin: 8px 0; }
 .bars .labrow { display: flex; justify-content: space-between; font-size: 13px; }
-.track { height: 8px; background: rgba(43,29,18,.12); border: 1px solid rgba(43,29,18,.25); overflow: hidden; }
-.track > i { display: block; height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-2)); }
-.track.p > i { background: #6b2b22; }
-.track.c > i { background: #8a6d2b; }
-.track.f > i { background: #3d4a28; }
-.track.warn > i { background: var(--blood); }
+.track { height: 10px; background: rgba(43,29,18,.12); border: 1px solid rgba(43,29,18,.25); overflow: hidden; }
+.track > i { display: block; height: 100%; background: linear-gradient(90deg, #e8b84a, #c48a1a); }
+.track.kcal > i { background: linear-gradient(90deg, #ffcc4d, #e89412); }
+.track.p > i { background: linear-gradient(90deg, #ff4d4d, #c41e1e); }
+.track.c > i { background: linear-gradient(90deg, #5ad4ff, #1a8fd4); }
+.track.f > i { background: linear-gradient(90deg, #7dff6a, #2f9e1e); }
+.track.water > i { background: linear-gradient(90deg, #4db8ff, #1565c0); }
+.track.fiber > i { background: linear-gradient(90deg, #b8e986, #5a8f2f); }
+.track.sugar > i { background: linear-gradient(90deg, #ff8ad4, #c2187a); }
+.track.na > i { background: linear-gradient(90deg, #ffe566, #c9a000); }
+.track.ca > i { background: linear-gradient(90deg, #e8e8e8, #9aa0a6); }
+.track.fe > i { background: linear-gradient(90deg, #ff8a4d, #b33b00); }
+.track.zn > i { background: linear-gradient(90deg, #c9b8ff, #6b4fd4); }
+.track.min > i { background: linear-gradient(90deg, #4dffd2, #0f8f78); }
+.track.vit > i { background: linear-gradient(90deg, #d4a0ff, #7b2cbf); }
+.track.xtra > i { background: linear-gradient(90deg, #ffb347, #e05a00); }
+.track.warn > i { background: linear-gradient(90deg, #ff6b4a, #8b0000); }
 
 .meal { margin-top: 10px; }
 .meal-h { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(43,29,18,.2); padding-bottom: 4px; }

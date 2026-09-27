@@ -401,7 +401,8 @@ function scaleFood(f, grams) {
   return {
     grams, name: f.name, id: f.id,
     kcal: n(f.kcal) * k, p: n(f.p) * k,
-    pAnimal: isAnimalFood(f) ? n(f.p) * k : 0,
+    animal: !!(f.animal || isAnimalFood(f)),
+    pAnimal: (f.animal || isAnimalFood(f)) ? n(f.p) * k : 0,
     carbs: n(f.c) * k, f: n(f.f) * k,
     fiber: n(f.fiber) * k, sugar: n(f.sugar) * k, sat: n(f.sat) * k,
     chol: n(f.chol) * k, na: n(f.na) * k, ca: n(f.ca) * k,
@@ -428,8 +429,10 @@ function isAnimalFood(f) {
   return /whey|caseina|casein|\bleite\b|queijo|iogurte|coalhada|\bovo|ovos|frango|bovina|suina|porco|patinho|acem|peixe|camarao|atum|salmao|sardinha|carne|peru|mucarela|requeijao|presunto|bacon|linguica|salsicha/.test(n);
 }
 function entryAnimalP(e) {
-  if (e && e.pAnimal != null) return n(e.pAnimal);
-  return isAnimalFood(e) || (e && e.id && isAnimalFood(foodById(e.id))) ? n(e.p) : 0;
+  if (!e) return 0;
+  if (e.animal === true) return n(e.p);
+  if (e.pAnimal != null) return n(e.pAnimal);
+  return isAnimalFood(e) || (e.id && isAnimalFood(foodById(e.id))) ? n(e.p) : 0;
 }
 function sumDay(date) {
   const d = dayObj(date);
@@ -642,14 +645,14 @@ function renderDiario() {
     ${campaignCard(p, viewDate)}
     <section class="ornate card bars">
       <h3>Metas de Macronutrientes<span>${t.phase === "high" ? "Dia ALTO · GET" : t.phase === "low" ? "Dia BAIXO · 70% GET" : "Doutrina da ração diária"}</span></h3>
-      ${bar("Energia", sum.kcal, t.kcal, "kcal")}
-      ${bar("Proteína animal", sum.pAnimal, t.prot, "g", "p")}
-      ${sum.p - sum.pAnimal > 0.5 ? `<p class="muted">P vegetal ${fmt(sum.p - sum.pAnimal,1)} g — fora da cota do soldado.</p>` : ""}
+      ${bar("Energia", sum.kcal, t.kcal, "kcal", "kcal")}
+      ${bar("Proteína", sum.pAnimal, t.prot, "g", "p")}
       ${bar("Carboidratos", sum.carbs, t.carb, "g", "c")}
       ${bar("Gordura", sum.f, t.fat, "g", "f")}
     </section>
-    <section class="ornate card">
+    <section class="ornate card bars">
       <h3>Água<span>${wt.total} / ${wt.goal} ml</span></h3>
+      ${bar("Água", wt.total, wt.goal, "ml", "water")}
       <div class="water">
         <strong>${wt.total} ml</strong>
         <button onclick="addWater(200)">+200</button>
@@ -657,7 +660,7 @@ function renderDiario() {
         <button onclick="addWater(500)">+500</button>
         <button onclick="addWater(-dReset())">zerar</button>
       </div>
-      <p class="muted">Meta ${wt.goal} ml · marcada ${wt.logged} ml${p.waterCountDrinks === false ? "" : " · bebidas do dia " + wt.drinks + " ml"}.</p>
+      <p class="muted">Marcada ${wt.logged} ml${p.waterCountDrinks === false ? "" : " · bebidas " + wt.drinks + " ml"}.</p>
     </section>
     <section class="ornate card">
       <h3>Exercício do dia<span>kcal acima da linha de base</span></h3>
@@ -1082,26 +1085,26 @@ function renderRelato() {
     week.push({ dt, kcal: sumDay(dt).kcal, goal: tt.kcal, phase: tt.phase });
   }
   const rows = [
-    ["Energia", sum.kcal, t.kcal, "kcal"],
-    ["Proteína animal", sum.pAnimal, t.prot, "g"],
-    ["Carboidratos", sum.carbs, t.carb, "g"],
-    ["Gordura", sum.f, t.fat, "g"],
-    ["Fibra", sum.fiber, DRI.fiber, "g"],
-    ["Açúcares", sum.sugar, DRI.sugar, "g"],
-    ["Sódio", sum.na, DRI.na, "mg"],
-    ["Cálcio", sum.ca, DRI.ca, "mg"],
-    ["Ferro", sum.fe, DRI.fe, "mg"],
-    ["Magnésio", sum.mg, DRI.mg, "mg"],
-    ["Zinco", sum.zn, DRI.zn, "mg"],
-    ["Potássio", sum.k, DRI.k, "mg"],
-    ["Selênio", sum.se, DRI.se, "µg"],
-    ["Vitamina A", sum.a, DRI.a, "µg"],
-    ["Vitamina C", sum.c_vit, DRI.c, "mg"],
-    ["Vitamina D", sum.d, DRI.d, "µg"],
-    ["B12", sum.b12, DRI.b12, "µg"],
-    ["Folato", sum.fol, DRI.fol, "µg"],
-    ["Cafeína", sum.caf, DRI.caf, "mg"],
-    ["Taurina", sum.tau, DRI.tau, "mg"]
+    ["Energia", sum.kcal, t.kcal, "kcal", "kcal"],
+    ["Proteína", sum.pAnimal, t.prot, "g", "p"],
+    ["Carboidratos", sum.carbs, t.carb, "g", "c"],
+    ["Gordura", sum.f, t.fat, "g", "f"],
+    ["Fibra", sum.fiber, DRI.fiber, "g", "fiber"],
+    ["Açúcares", sum.sugar, DRI.sugar, "g", "sugar"],
+    ["Sódio", sum.na, DRI.na, "mg", "na"],
+    ["Cálcio", sum.ca, DRI.ca, "mg", "ca"],
+    ["Ferro", sum.fe, DRI.fe, "mg", "fe"],
+    ["Magnésio", sum.mg, DRI.mg, "mg", "min"],
+    ["Zinco", sum.zn, DRI.zn, "mg", "zn"],
+    ["Potássio", sum.k, DRI.k, "mg", "min"],
+    ["Selênio", sum.se, DRI.se, "µg", "min"],
+    ["Vitamina A", sum.a, DRI.a, "µg", "vit"],
+    ["Vitamina C", sum.c_vit, DRI.c, "mg", "vit"],
+    ["Vitamina D", sum.d, DRI.d, "µg", "vit"],
+    ["B12", sum.b12, DRI.b12, "µg", "vit"],
+    ["Folato", sum.fol, DRI.fol, "µg", "vit"],
+    ["Cafeína", sum.caf, DRI.caf, "mg", "xtra"],
+    ["Taurina", sum.tau, DRI.tau, "mg", "xtra"]
   ];
   $("#page-relato").innerHTML = `
     <section class="ornate card">
@@ -1112,11 +1115,8 @@ function renderRelato() {
         : "Linha = meta do dia."}</p>
     </section>
     <section class="ornate card">
-      <h3>Índice de nutrientes<span>Percentual da meta / DRI</span></h3>
-      <table class="nutri">${rows.map(([n,v,m,u]) => {
-        const pct = m ? (v/m)*100 : 0;
-        return `<tr><td>${n}</td><td>${fmt(v,1)} ${u}</td><td class="pct">${fmt(pct,0)}%</td></tr>`;
-      }).join("")}</table>
+      <h3>Índice de nutrientes<span>Consumido / meta · DRI</span></h3>
+      <div class="bars">${rows.map(r => bar(r[0], r[1], r[2], r[3], r[4] || "")).join("")}</div>
       <p class="quote">Micros vêm da TBCA (USP/FoRC). Quando a tabela não informa o nutriente, o Códice mostra zero — não inventa.</p>
     </section>
     <section class="ornate card">
@@ -1626,7 +1626,7 @@ function macrosBlock(src) {
     inos: n(m.inos != null ? m.inos : m.inositol),
     glucu: n(m.glucu), carn: n(m.carn),
     liquid: !!(m.liquid || src.liquid),
-    animal: !!m.animal
+    animal: !!(m.animal || src.animal)
   };
   if (m.kcal != null) out.kcal = n(m.kcal);
   return out;
@@ -1666,16 +1666,22 @@ window.importBotSeal = function() {
   let nAdd = 0, miss = [], minted = 0;
   function pushSlot(idx, it) {
     while (ensureRefeicoes(d).length <= idx) d.refeicoes.push([]);
-    let f = it.id ? foodById(it.id) : null;
-    if (!f) f = findFoodByQuery(it.q);
     const mac = macrosBlock(it);
-    if (!f && mac && it.q) {
+    if (mac && it.animal === true) mac.animal = true;
+    if (mac && it.animal === false) mac.animal = false;
+    let f = null;
+    if (mac && it.q) {
       f = registerSealFood(it.q, mac, it.cat);
       minted++;
+    } else {
+      f = it.id ? foodById(it.id) : findFoodByQuery(it.q);
     }
     if (!f) { miss.push(it.q || it.id || "?"); return; }
     if (it.liquid || (mac && mac.liquid)) f.liquid = true;
-    mealItems(d, idx).push(scaleFood(f, Number(it.g || it.grams || 100)));
+    if (it.animal === true) f.animal = true;
+    const e = scaleFood(f, Number(it.g || it.grams || 100));
+    if (it.animal === true) { e.animal = true; e.pAnimal = n(e.p); }
+    mealItems(d, idx).push(e);
     nAdd++;
   }
   const alias = { cafe: 0, almoco: 1, jantar: 2, lanches: 3, I: 0, II: 1, III: 2, IV: 3 };
