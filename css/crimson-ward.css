@@ -1,0 +1,81 @@
+/* Carmesim metálico + heráldica (livro / caveira / escudo-olho / espada serrilhada) */
+
+.sigil { position: relative; }
+.sigil::before,
+.sigil::after { content: none !important; display: none !important; }
+
+.sigil-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+.sigil .titles { text-align: center; flex: 0 1 auto; }
+.orn-shield,
+.orn-sword {
+  display: block;
+  flex: 0 0 auto;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.orn-shield {
+  width: 28px;
+  height: 34px;
+  background-image: url("../assets/orn-shield.png");
+}
+.orn-sword {
+  width: 20px;
+  height: 36px;
+  background-image: url("../assets/orn-sword.png");
+}
+.title-skull {
+  width: 88px;
+  height: 26px;
+  margin: 2px auto 0;
+  background: url("../assets/orn-skull.svg") no-repeat center / contain;
+  opacity: .92;
+}
+
+.splash .sigil { margin-bottom: 6px; }
+.splash .orn-shield { width: 34px; height: 42px; }
+.splash .orn-sword { width: 24px; height: 44px; }
+.splash .title-skull { width: 110px; height: 32px; }
+
+.nav button[data-go="page-relato"]::before,
+.nav button[data-go="page-frater"]::before {
+  content: "";
+  display: block;
+  margin: 0 auto 3px;
+  opacity: .95;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.nav button[data-go="page-relato"]::before {
+  width: 16px;
+  height: 18px;
+  background-image: url("../assets/orn-shield.svg");
+  filter: brightness(1.25) saturate(.85);
+}
+.nav button[data-go="page-frater"]::before {
+  width: 12px;
+  height: 20px;
+  background-image: url("../assets/orn-sword.svg");
+  filter: brightness(1.25) saturate(.85);
+}
+
+.dose.on {
+  background:
+    linear-gradient(180deg, rgba(255,200,200,.16), transparent 40%),
+    linear-gradient(180deg, #7a141c, #3d0a0e);
+  color: #f3e6c8;
+  border-color: #d4a44a;
+}
+
+.chip.on {
+  background: #5c1016;
+  color: #f3ead8;
+  border-color: #d4a44a;
+}

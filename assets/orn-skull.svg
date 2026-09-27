@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 36" fill="none">
+  <path stroke="#6b1c16" stroke-width=".7" d="M8 18 H42"/>
+  <path stroke="#6b1c16" stroke-width=".7" d="M78 18 H112"/>
+  <path stroke="#6b1c16" stroke-width=".7" d="M42 18 L45 15 L48 18 L45 21 Z"/>
+  <path stroke="#6b1c16" stroke-width=".7" d="M72 18 L75 15 L78 18 L75 21 Z"/>
+  <!-- skull -->
+  <ellipse cx="60" cy="14.2" rx="9.2" ry="8.4" fill="#f3ead8" stroke="#3a2218" stroke-width="1.1"/>
+  <path d="M52.2 16.5 Q52 22 55.2 24.5 L57 26.2 V28.5 H63 V26.2 L64.8 24.5 Q68 22 67.8 16.5" fill="#f3ead8" stroke="#3a2218" stroke-width="1.1"/>
+  <ellipse cx="56.2" cy="14.2" rx="2.1" ry="2.6" fill="#2a1810"/>
+  <ellipse cx="63.8" cy="14.2" rx="2.1" ry="2.6" fill="#2a1810"/>
+  <path d="M60 16.2 L58.4 20.2 H61.6 Z" fill="#2a1810"/>
+  <path stroke="#3a2218" stroke-width=".7" d="M56.4 25.2 V27.4 M58.2 25.4 V28.2 M60 25.4 V28.4 M61.8 25.4 V28.2 M63.6 25.2 V27.4"/>
+  <path stroke="#6b1c16" stroke-width=".6" d="M48 30 Q60 34 72 30"/>
+</svg>

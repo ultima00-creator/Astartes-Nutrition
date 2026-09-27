@@ -510,9 +510,16 @@ function renderOnboard() {
   const act = ACT.map(a => `<option value="${a.id}">${a.n} — ${a.d}</option>`).join("");
   $("#page-onboard").innerHTML = `
     <div class="splash">
-      <div class="sigil"><img src="assets/icon-192.png" alt=""><div class="titles">
-        <small>Codex Astartes</small><strong>Astartes Nutrition</strong>
-      </div></div>
+      <div class="sigil">
+        <div class="sigil-row">
+          <i class="orn-shield" aria-hidden="true"></i>
+          <div class="titles">
+            <small>Codex Astartes</small><strong>Astartes Nutrition</strong>
+          </div>
+          <i class="orn-sword" aria-hidden="true"></i>
+        </div>
+        <div class="title-skull" aria-hidden="true"></div>
+      </div>
       <p class="sub">ORDO CORPORIS</p>
       <h1 class="display">Templatus Imperialis</h1>
       <p class="quote">“O corpo é a primeira fortaleza. A ração, o primeiro municiamento.”</p>

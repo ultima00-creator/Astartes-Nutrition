@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" fill="none">
+  <!-- rays -->
+  <path stroke="#8b1a1f" stroke-width=".6" opacity=".7"
+    d="M16 2 V6 M6 8 L9 11 M26 8 L23 11 M3 20 L7 20 M29 20 L25 20 M7 32 L10 28 M25 32 L22 28"/>
+  <!-- heater -->
+  <path fill="#8b1a1f" stroke="#c9a06a" stroke-width="1.2"
+    d="M16 5.5 L27 10.2 V20.5 C27 27.2 21.4 32.6 16 35.2 C10.6 32.6 5 27.2 5 20.5 V10.2 Z"/>
+  <path fill="none" stroke="#5a0d12" stroke-width=".6"
+    d="M16 7.4 L25.2 11.2 V20.4 C25.2 26.2 20.6 30.8 16 33.2 C11.4 30.8 6.8 26.2 6.8 20.4 V11.2 Z"/>
+  <!-- eye -->
+  <ellipse cx="16" cy="17.2" rx="6.2" ry="3.1" fill="#f3ead8" stroke="#e8d7b3" stroke-width=".6"/>
+  <circle cx="16" cy="17.2" r="1.7" fill="#2a1810"/>
+  <circle cx="16.5" cy="16.8" r=".5" fill="#f3ead8"/>
+  <!-- brow -->
+  <path stroke="#e8d7b3" stroke-width=".7" d="M10.2 15.2 Q16 13.4 21.8 15.2"/>
+  <!-- tiny skull -->
+  <circle cx="16" cy="24.6" r="2.2" fill="#e8d7b3"/>
+  <circle cx="15.2" cy="24.3" r=".45" fill="#2a1810"/>
+  <circle cx="16.8" cy="24.3" r=".45" fill="#2a1810"/>
+</svg>

@@ -1,14 +1,22 @@
-const CACHE = "astartes-v6";
+const CACHE = "astartes-v7";
 const ASSETS = [
   "./",
   "./index.html",
   "./css/codex.css",
+  "./css/onboard-fix.css",
+  "./css/marble-ward.css",
+  "./css/crimson-ward.css",
   "./js/app.js",
   "./js/foods.js",
   "./manifest.webmanifest",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
-  "./assets/apple-touch-icon.png"
+  "./assets/apple-touch-icon.png",
+  "./assets/orn-skull.svg",
+  "./assets/orn-sword.svg",
+  "./assets/orn-shield.svg",
+  "./assets/orn-sword.png",
+  "./assets/orn-shield.png"
 ];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(ASSETS.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));
