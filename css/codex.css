@@ -80,13 +80,13 @@ body:has(#page-onboard.active) .app { padding-bottom: 16px; }
 }
 .sigil img { width: 36px; height: 36px; border-radius: 50%; }
 .sigil .titles { text-align: center; }
-.sigil small { display: block; font-size: 10px; letter-spacing: .28em; color: var(--gold); text-transform: uppercase; }
+.sigil small { display: block; font-size: 10px; letter-spacing: .28em; color: #6a4e14; text-transform: uppercase; }
 .sigil strong {
   font-family: "Cinzel Decorative", serif; font-size: 15px;
-  background: linear-gradient(180deg, #f3e2a8 0%, #d4a017 42%, #8a6418 100%);
+  background: linear-gradient(180deg, #c49212 0%, #8a6418 48%, #4a360e 100%);
   -webkit-background-clip: text; background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 1px 0 rgba(90,64,20,.35));
+  filter: drop-shadow(0 1px 0 rgba(255,236,180,.55)) drop-shadow(0 1px 1px rgba(42,30,12,.45));
 }
 
 .page { padding: 8px 14px 20px; display: none; }
@@ -285,8 +285,9 @@ textarea { min-height: 70px; }
 }
 .splash h1 {
   font-size: 26px; margin: 8px 0 4px;
-  background: linear-gradient(180deg, #f3e2a8 0%, #d4a017 42%, #8a6418 100%);
+  background: linear-gradient(180deg, #c49212 0%, #8a6418 48%, #4a360e 100%);
   -webkit-background-clip: text; background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255,236,180,.5)) drop-shadow(0 1px 1px rgba(42,30,12,.4));
 }
-.splash .sub { letter-spacing: .32em; font-size: 10px; color: var(--gold); }
+.splash .sub { letter-spacing: .32em; font-size: 10px; color: #6a4e14; }

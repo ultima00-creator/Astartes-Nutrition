@@ -42,9 +42,9 @@
   width: 96px;
   height: 96px;
   margin: 0;
-  transform: translate(-50%, -52%);
+  transform: translate(-50%, -68%);
   background: url("../assets/seal-munitorum.png") no-repeat center / contain;
-  opacity: .28;
+  opacity: .48;
   z-index: 0;
   pointer-events: none;
 }
@@ -54,12 +54,12 @@
   content: "";
   position: absolute;
   left: 50%;
-  top: 8%;
+  top: 2%;
   width: 200px;
   height: 200px;
   transform: translateX(-50%);
   background: url("../assets/seal-munitorum.png") no-repeat center / contain;
-  opacity: .22;
+  opacity: .44;
   pointer-events: none;
   z-index: 0;
 }
