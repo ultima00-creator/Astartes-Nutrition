@@ -1,6 +1,7 @@
-/* Codex:Munitorum — selos do Astartes:Program */
+/* Codex:Munitorum — âmbar imperial + selo de ração ao fundo */
 
-.sigil { position: relative; }
+.sigil { position: relative; isolation: isolate; min-height: 64px; justify-content: center; }
+.topbar { overflow: visible; }
 .sigil::before,
 .sigil::after { content: none !important; display: none !important; }
 
@@ -10,8 +11,10 @@
   justify-content: center;
   gap: 10px;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
-.sigil .titles { text-align: center; flex: 0 1 auto; }
+.sigil .titles { text-align: center; flex: 0 1 auto; position: relative; z-index: 1; }
 .orn-shield,
 .orn-sword {
   display: block;
@@ -19,30 +22,57 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  border-radius: 4px;
 }
 .orn-shield {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   background-image: url("../assets/mark-aquila.png");
 }
 .orn-sword {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   background-image: url("../assets/mark-swords.png");
 }
+
+/* selo de provisões ATRÁS do título */
 .title-skull {
-  width: 52px;
-  height: 52px;
-  margin: 4px auto 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 96px;
+  height: 96px;
+  margin: 0;
+  transform: translate(-50%, -52%);
   background: url("../assets/seal-munitorum.png") no-repeat center / contain;
-  opacity: .98;
+  opacity: .28;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.splash .sigil { margin-bottom: 6px; }
-.splash .orn-shield { width: 40px; height: 40px; }
-.splash .orn-sword { width: 40px; height: 40px; }
-.splash .title-skull { width: 72px; height: 72px; }
+.splash { position: relative; }
+.splash::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8%;
+  width: 200px;
+  height: 200px;
+  transform: translateX(-50%);
+  background: url("../assets/seal-munitorum.png") no-repeat center / contain;
+  opacity: .22;
+  pointer-events: none;
+  z-index: 0;
+}
+.splash .sigil { margin-bottom: 4px; min-height: 64px; }
+.splash .orn-shield { width: 32px; height: 32px; }
+.splash .orn-sword { width: 32px; height: 32px; }
+.splash .title-skull { display: none; }
+.splash .sub,
+.splash h1,
+.splash .sigil {
+  position: relative;
+  z-index: 1;
+}
 
 .nav button[data-go]::before {
   content: "";
@@ -53,6 +83,7 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+  filter: drop-shadow(0 1px 0 rgba(255,236,180,.35));
 }
 .nav button[data-go="page-relato"]::before {
   background-image: url("../assets/mark-eagle.png");
@@ -69,14 +100,14 @@
 
 .dose.on {
   background:
-    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,220,210,.28), transparent 55%),
-    linear-gradient(180deg, #c4333a 0%, #7a141c 55%, #3d0a0e 100%);
-  color: #f3e6c8;
-  border-color: #e0c07a;
+    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,236,180,.35), transparent 55%),
+    linear-gradient(180deg, #d4a017 0%, #8a6418 55%, #4a360e 100%);
+  color: #2a1e0c;
+  border-color: #e8c85a;
 }
 
 .chip.on {
-  background: #5c1016;
-  color: #f3ead8;
-  border-color: #d4a44a;
+  background: #6a4e14;
+  color: #f8ead0;
+  border-color: #e0c07a;
 }
