@@ -1,4 +1,4 @@
-const CACHE = "munitorum-v4";
+const CACHE = "munitorum-v5";
 const ASSETS = [
   "./",
   "./index.html",

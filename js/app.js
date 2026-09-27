@@ -523,7 +523,6 @@ function renderOnboard() {
         </div>
         <div class="title-skull" aria-hidden="true"></div>
       </div>
-      <p class="sub">ORDO CORPORIS</p>
       <h1 class="display">Templatus Imperialis</h1>
       <p class="quote">“O corpo é a primeira fortaleza. A ração, o primeiro municiamento.”</p>
       <form class="ornate card" id="form-onboard" style="text-align:left">
