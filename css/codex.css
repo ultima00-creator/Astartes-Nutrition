@@ -108,6 +108,13 @@ body:has(#page-onboard.active) .app { padding-bottom: 16px; }
   background: var(--parchment-2); border: 1px solid var(--frame); color: var(--ink);
   font-family: Cinzel, serif; width: 36px; height: 36px; border-radius: 2px;
 }
+.date-nav button.pendulum {
+  width: 56px; height: 48px; padding: 0;
+  border: 0; background: transparent;
+  background-repeat: no-repeat; background-position: center; background-size: 48px auto;
+}
+.date-nav button.pendulum.prev { background-image: url("../assets/pendulum-left.png"); }
+.date-nav button.pendulum.next { background-image: url("../assets/pendulum-right.png"); }
 .date-nav .when { font-family: Cinzel, serif; font-size: 13px; letter-spacing: .12em; }
 
 .rings { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; text-align: center; }

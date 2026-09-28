@@ -1,4 +1,4 @@
-const CACHE = "munitorum-v5";
+const CACHE = "munitorum-v6";
 const ASSETS = [
   "./",
   "./index.html",
@@ -17,7 +17,9 @@ const ASSETS = [
   "./assets/orn-sword.svg",
   "./assets/orn-shield.svg",
   "./assets/orn-sword.png",
-  "./assets/orn-shield.png"
+  "./assets/orn-shield.png",
+  "./assets/pendulum-left.png",
+  "./assets/pendulum-right.png"
 ];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(ASSETS.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));

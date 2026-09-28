@@ -624,9 +624,9 @@ function renderDiario() {
 
   $("#page-diario").innerHTML = `
     <div class="date-nav">
-      <button onclick="chgDate(-1)">‹</button>
+      <button class="pendulum prev" onclick="chgDate(-1)" aria-label="Dia anterior"></button>
       <div class="when">${dateLabel(viewDate)}${t.phase ? ` · ${t.phase === "high" ? "CHO alto" : "CHO baixo"}` : ""}</div>
-      <button onclick="chgDate(1)">›</button>
+      <button class="pendulum next" onclick="chgDate(1)" aria-label="Dia seguinte"></button>
     </div>
     <div style="display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap">
       <button class="btn ghost" onclick="copyYesterday()">Copiar ontem</button>
